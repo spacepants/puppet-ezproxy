@@ -107,7 +107,7 @@ class ezproxy (
   $download_url             = $::ezproxy::params::download_url,
   $proxy_by_hostname        = $::ezproxy::params::proxy_by_hostname,
   $first_port               = $::ezproxy::params::first_port,
-  $auto_login_ips           = $::ezproxy::params::autologin_ips,
+  $auto_login_ips           = $::ezproxy::params::auto_login_ips,
   $include_ips              = $::ezproxy::params::include_ips,
   $exclude_ips              = $::ezproxy::params::exclude_ips,
   $login_port               = $::ezproxy::params::login_port,
