@@ -1,0 +1,121 @@
+### MANAGED BY PUPPET
+##
+##  For more information on this file, see:
+##          http://www.oclc.org/support/documentation/ezproxy/cfg/
+##                                   AND
+##          http://www.oclc.org/support/documentation/ezproxy/db/
+
+##  In this file, lines starting with # are comments.  The lines starting
+##  with ##  are meant solely as comments, whereas the lines starting with
+##  only # are followed by example entries.
+
+
+##  PLEASE NOTE: IF YOU CHANGE THIS FILE, you must restart EZproxy to make
+##  those changes take effect. == see http://www.oclc.org/support/documentation/ezproxy/restart.htm
+
+
+# ****************************EZproxy options *****************************************
+
+## RunAs directive
+## For more information on this directive, see:
+## http://www.oclc.org/support/documentation/ezproxy/cfg/runas/
+RunAs <%= @ezproxy_user %>:<%= @ezproxy_group %>
+
+## After running 'EZproxy -c' to test connectivity as instructed in the install guides
+## (http://www.oclc.org/us/en/support/documentation/ezproxy/download/),
+## If necessary, Name your EZproxy server
+## == http://www.oclc.org/support/documentation/ezproxy/cfg/name/
+
+# Name My.ezproxy.server
+Name <%= @ezproxy_url %>
+
+##  EZproxy must be set to Proxy-by-port or to Proxy-by-hostname:
+##  see http://www.oclc.org/support/documentation/ezproxy/portvshostname.htm
+##                             AND
+##  http://www.oclc.org/support/documentation/ezproxy/cfg/proxybyhostname.htm
+## If proxying by port, set the first port number to be used.
+## == http://www.oclc.org/support/documentation/ezproxy/cfg/firstport/
+
+<% if @proxy_by_hostname -%>
+# Option ProxyByHostname
+Option ProxyByHostname
+
+<% else -%>
+# FirstPort 5000
+FirstPort <%= @first_port %>
+<% end -%>
+
+## Exclude/Include directives: 10.x.x.x changed to Automatically Authenticate - pb
+## More info: http://pluto.potsdam.edu/ezproxywiki/index.php/Config.txt
+
+<% if @auto_login_ips -%>
+<% @auto_login_ips.each do |this_auto_ip| -%>
+A <%= this_auto_ip %>
+<% end -%>
+<% end -%>
+<% if @include_ips -%>
+<% @include_ips.each do |this_include_ip| -%>
+I <%= this_include_ip %>
+<% end -%>
+<% end -%>
+<% if @exclude_ips -%>
+<% @exclude_ips.each do |this_exclude_ip| -%>
+E <%= this_exclude_ip %>
+<% end -%>
+<% end -%>
+
+##  By default, EZproxy listens on port 2048. You can specify a different port here
+# LoginPort 80
+LoginPort <%= @login_port %>
+
+##  SSL == see: http://www.oclc.org/support/documentation/ezproxy/cfg/ssl/
+##  If using Proxy by HostName you must use a wildcard SSL certificate
+##  Please review http://www.oclc.org/support/documentation/ezproxy/cfg/ssl/certopts.htm before implementing SSL
+# LoginPortSSL 443
+<% if @ssl -%>
+LoginPortSSL 443
+<% if @https_login -%>
+Option ForceHTTPSLogin
+<% end -%>
+<% if @https_admin -%>
+Option ForceHTTPSAdmin
+<% end -%>
+<% end -%>
+
+##  Connection limits. == see: http://www.oclc.org/support/documentation/ezproxy/cfg/limits.htm
+
+# MaxLifetime 120
+MaxLifetime <%= @max_lifetime %>
+# MaxSessions 500
+MaxSessions <%= @max_sessions %>
+# MaxVirtualHosts 1000
+MaxVirtualHosts <%= @max_vhosts %>
+
+##  When using Safari 2.0 and later with only three hostname components, Safari defaults to blocking the cookie. With EZproxy 3.6c GA
+## (2006-03-10) or later, you can add add the following to work around the restriction.
+Option SafariCookiePatch
+
+
+##  Securing EZproxy == see: http://www.oclc.org/support/documentation/ezproxy/example/securing.htm
+
+Audit Most
+AuditPurge 7
+Option StatusUser
+Option LogSession
+IntruderIPAttempts -interval=5 -expires=15 20
+IntruderUserAttempts -interval=5 -expires=15 10
+UsageLimit -enforce -interval=15 -expires=120 -MB=200 Global
+
+##  Logging == see: http://www.oclc.org/support/documentation/ezproxy/cfg/logformat/
+##                                            AND
+##                  http://www.oclc.org/support/documentation/ezproxy/cfg/logfile/
+<% @log_filters.each do |this_log_filter| -%>
+LogFilter <%= this_log_filter %>
+<% end -%>
+LogFile <%= @log_file %>
+LogFormat <%= @log_format %>
+
+# **************************** Database Definitions *****************************************
+##  See http://www.oclc.org/support/documentation/ezproxy/db/default.htm
+
+IncludeFile sites.txt

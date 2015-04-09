@@ -1,0 +1,22 @@
+T <%= @name %>
+<% @prepends.each do |this_prepend| -%>
+<%= this_prepend %>
+<% end -%>
+<% @urls.each do |this_url| -%>
+U <%= this_url %>
+<% end -%>
+<% @hosts.each do |this_host| -%>
+H <%= this_host %>
+<% end -%>
+<% @domains.each do |this_domain| -%>
+D <%= this_domain %>
+<% end -%>
+<% @domain_js.each do |this_domain_js| -%>
+DJ <%= this_domain_js %>
+<% end -%>
+<% @host_js.each do |this_host_js| -%>
+HJ <%= this_host_js %>
+<% end -%>
+<% @appends.each do |this_append| -%>
+<%= this_append %>
+<% end -%>

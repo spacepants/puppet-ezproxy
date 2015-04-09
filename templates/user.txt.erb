@@ -1,0 +1,52 @@
+## MANAGED BY PUPPET
+#
+# For more information on this file and the options for user
+# authentication, see:
+#      http://www.oclc.org/us/en/support/documentation/ezproxy/usr/
+#
+# Lines starting with # are comments
+#
+# This file may be updated while EZproxy is running without the need to
+# stop and restart the program.
+#
+# This file contains three fields separated by colons (:) of the form
+#
+#      username:password:options
+#
+#
+# A basic entry consists of a username and password, such as
+#
+#      someuser:somepass
+#
+# To create an administrative user, place :admin after the password.
+# For example, the following line would create a username of rdoe with
+# a password of keepsafe that has administrative access to the EZproxy server.
+#
+#      rdoe:keepsafe:admin
+#
+<% @local_users.each do |this_local_user| -%>
+<%= this_local_user %>
+<% end -%>
+<% if @cas -%>
+# CAS CONFIG
+::CAS
+LoginURL <%= @cas_login_url %>
+ServiceValidateURL <%= @cas_service_validate_url %>
+<% @admins.each do |this_admin| -%>
+IfUser <%= this_admin %>; Admin
+<% end -%>
+/CAS
+<% end -%>
+<% if @ldap -%>
+# LDAP CONFIG
+::LDAP
+<% @ldap_options.each do |this_option| -%>
+<%= this_option %>
+<% end -%>
+<%= @ldap_url %>
+IfUnauthenticated; Stop
+<% @admins.each do |this_admin| -%>
+IfUser <%= this_admin %>; Admin
+<% end -%>
+/LDAP
+<% end -%>
