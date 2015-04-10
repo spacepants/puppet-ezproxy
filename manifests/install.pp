@@ -23,8 +23,9 @@ class ezproxy::install {
     mode    => '0755',
     require => User[$::ezproxy::ezproxy_user]
   }
+  $cmd = "curl -o ${::ezproxy::install_path}/ezproxy ${::ezproxy::download_url}"
   exec { 'download ezproxy':
-    command => "curl -o ${::ezproxy::install_path}/ezproxy ${::ezproxy::download_url}",
+    command => $cmd,
     creates => "${::ezproxy::install_path}/ezproxy",
     path    => '/sbin:/bin:/usr/sbin:/usr/bin',
     require => File[$::ezproxy::install_path]

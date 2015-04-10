@@ -181,7 +181,7 @@ class ezproxy (
     if $cas_service_validate_url {
       validate_string($cas_service_validate_url)
     } else {
-      fail('CAS authentication requires a valid CAS service validate URL string.')
+      fail('CAS authentication requires a valid service validate URL string.')
     }
   }
   validate_bool($ldap)
