@@ -33,7 +33,7 @@ describe 'ezproxy' do
           it { is_expected.to contain_ezproxy__stanza('WhatIsMyIP') }
           it { is_expected.to contain_ezproxy__stanza('-hide DOI System') }
 
-          it { is_expected.to contain_file('/etc/init.d/ezproxy').with_content(/su - ezproxy "\/usr\/local\/ezproxy\/ezproxy \$\*"/) }
+          it { is_expected.to contain_file('/etc/init.d/ezproxy').with_content(/su - ezproxy "\$EZPROXY \$\*"\n$/) }
           it { is_expected.to contain_service('ezproxy').with_ensure('running') }
 
           it { is_expected.to contain_class('concat::setup') }
