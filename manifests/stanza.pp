@@ -46,6 +46,32 @@ define ezproxy::stanza (
   $appends   = [],
   $order     = '1',
   ) {
+
+  validate_bool($hide)
+  validate_string($hide_flag)
+  if $urls {
+    validate_array($urls)
+  }
+  if $hosts {
+    validate_array($hosts)
+  }
+  if $domains {
+    validate_array($domains)
+  }
+  if $domain_js {
+    validate_array($domain_js)
+  }
+  if $host_js {
+    validate_array($host_js)
+  }
+  if $prepends {
+    validate_array($prepends)
+  }
+  if $appends {
+    validate_array($appends)
+  }
+  validate_string($order)
+
   concat::fragment { $name:
     ensure  => present,
     target  => 'ezproxy sites',
