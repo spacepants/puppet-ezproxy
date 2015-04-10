@@ -1,4 +1,8 @@
+<% if @hide -%>
+T <%= @hide_flag %> <%= @name %>
+<% else -%>
 T <%= @name %>
+<% end -%>
 <% if @prepends -%>
 <% @prepends.each do |this_prepend| -%>
 <%= this_prepend %>

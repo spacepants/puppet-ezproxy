@@ -32,10 +32,11 @@ class ezproxy::config {
       domain_js => [ 'whatismyip.com' ],
       order     => '0',
     }
-    ezproxy::stanza { '-hide DOI System':
+    ezproxy::stanza { 'DOI System':
       urls    => [ 'http://dx.doi.org' ],
       domains => [ 'doi.org' ],
       order   => '0',
+      hide    => true,
     }
   }
 }

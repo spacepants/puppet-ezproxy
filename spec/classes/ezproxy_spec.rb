@@ -31,7 +31,7 @@ describe 'ezproxy' do
           it { is_expected.to contain_file('ezproxy sites').with_ensure('present') }
           it { is_expected.to contain_ezproxy__stanza('Worldcat.org') }
           it { is_expected.to contain_ezproxy__stanza('WhatIsMyIP') }
-          it { is_expected.to contain_ezproxy__stanza('-hide DOI System') }
+          it { is_expected.to contain_ezproxy__stanza('DOI System').with_hide(true) }
 
           it { is_expected.to contain_file('/etc/init.d/ezproxy').with_content(/su - ezproxy "\$EZPROXY \$\*"\n$/) }
           it { is_expected.to contain_service('ezproxy').with_ensure('running') }
@@ -40,7 +40,7 @@ describe 'ezproxy' do
           it { is_expected.to contain_concat('ezproxy sites').with_path('/usr/local/ezproxy/sites.txt') }
           it { is_expected.to contain_concat__fragment('Worldcat.org').with_ensure('present') }
           it { is_expected.to contain_concat__fragment('WhatIsMyIP').with_ensure('present') }
-          it { is_expected.to contain_concat__fragment('-hide DOI System').with_ensure('present') }
+          it { is_expected.to contain_concat__fragment('DOI System').with_ensure('present') }
           it { is_expected.to contain_exec('concat_ezproxy sites') }
         end
       end

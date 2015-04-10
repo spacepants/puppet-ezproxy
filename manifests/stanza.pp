@@ -4,6 +4,12 @@
 #
 # === Parameters
 #
+# [*hide*]
+#   Boolean for whether or not to include the hide flag in the title line.
+#
+# [*hide_flag*]
+#   String to include in the title line if $hide is true.
+#
 # [*urls*]
 #   Array of URLs for the stanza.
 #
@@ -29,6 +35,8 @@
 #   Include order for the stanza.
 #
 define ezproxy::stanza (
+  $hide      = false,
+  $hide_flag = '-hide',
   $urls      = [],
   $hosts     = [],
   $domains   = [],
