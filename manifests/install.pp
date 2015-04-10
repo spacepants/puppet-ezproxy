@@ -13,7 +13,7 @@ class ezproxy::install {
     system  => true,
     home    => $::ezproxy::install_path,
     shell   => '/sbin/nologin',
-    gid     => $::ezproxy::group,
+    gid     => $::ezproxy::ezproxy_group,
     require => Group[$::ezproxy::ezproxy_group]
   }
   file { $::ezproxy::install_path:
