@@ -5,21 +5,21 @@
 class ezproxy::config {
   file { "${::ezproxy::install_path}/user.txt":
     ensure  => file,
-    owner   => $::ezproxy::user,
-    group   => $::ezproxy::group,
+    owner   => $::ezproxy::ezproxy_user,
+    group   => $::ezproxy::ezproxy_group,
     content => template('ezproxy/user.txt.erb')
   }
   file { "${::ezproxy::install_path}/config.txt":
     ensure  => file,
-    owner   => $::ezproxy::user,
-    group   => $::ezproxy::group,
+    owner   => $::ezproxy::ezproxy_user,
+    group   => $::ezproxy::ezproxy_group,
     content => template('ezproxy/config.txt.erb')
   }
   concat { 'ezproxy sites':
     ensure => present,
     path   => "${::ezproxy::install_path}/sites.txt",
-    owner  => $::ezproxy::user,
-    group  => $::ezproxy::group,
+    owner  => $::ezproxy::ezproxy_user,
+    group  => $::ezproxy::ezproxy_group,
   }
   if $::ezproxy::default_stanzas {
     ezproxy::stanza { 'Worldcat.org':
