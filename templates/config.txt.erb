@@ -109,8 +109,10 @@ UsageLimit -enforce -interval=15 -expires=120 -MB=200 Global
 ##  Logging == see: http://www.oclc.org/support/documentation/ezproxy/cfg/logformat/
 ##                                            AND
 ##                  http://www.oclc.org/support/documentation/ezproxy/cfg/logfile/
+<% if @log_filters -%>
 <% @log_filters.each do |this_log_filter| -%>
 LogFilter <%= this_log_filter %>
+<% end -%>
 <% end -%>
 LogFile <%= @log_file %>
 LogFormat <%= @log_format %>
