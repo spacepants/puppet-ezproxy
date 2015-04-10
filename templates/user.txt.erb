@@ -24,29 +24,37 @@
 #
 #      rdoe:keepsafe:admin
 #
+<% if @local_users -%>
 <% @local_users.each do |this_local_user| -%>
 <%= this_local_user %>
+<% end -%>
 <% end -%>
 <% if @cas -%>
 # CAS CONFIG
 ::CAS
 LoginURL <%= @cas_login_url %>
 ServiceValidateURL <%= @cas_service_validate_url %>
+<% if @admins -%>
 <% @admins.each do |this_admin| -%>
 IfUser <%= this_admin %>; Admin
+<% end -%>
 <% end -%>
 /CAS
 <% end -%>
 <% if @ldap -%>
 # LDAP CONFIG
 ::LDAP
+<% if @ldap_options -%>
 <% @ldap_options.each do |this_option| -%>
 <%= this_option %>
 <% end -%>
+<% end -%>
 <%= @ldap_url %>
 IfUnauthenticated; Stop
+<% if @admins -%>
 <% @admins.each do |this_admin| -%>
 IfUser <%= this_admin %>; Admin
+<% end -%>
 <% end -%>
 /LDAP
 <% end -%>
