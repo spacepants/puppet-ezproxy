@@ -1,22 +1,36 @@
 T <%= @name %>
+<% if @prepends -%>
 <% @prepends.each do |this_prepend| -%>
 <%= this_prepend %>
 <% end -%>
+<% end -%>
+<% if @urls -%>
 <% @urls.each do |this_url| -%>
 U <%= this_url %>
 <% end -%>
+<% end -%>
+<% if @hosts -%>
 <% @hosts.each do |this_host| -%>
 H <%= this_host %>
 <% end -%>
+<% end -%>
+<% if @domains -%>
 <% @domains.each do |this_domain| -%>
 D <%= this_domain %>
 <% end -%>
+<% end -%>
+<% if @domain_js -%>
 <% @domain_js.each do |this_domain_js| -%>
 DJ <%= this_domain_js %>
 <% end -%>
+<% end -%>
+<% if @host_js -%>
 <% @host_js.each do |this_host_js| -%>
 HJ <%= this_host_js %>
 <% end -%>
+<% end -%>
+<% if @appends -%>
 <% @appends.each do |this_append| -%>
 <%= this_append %>
+<% end -%>
 <% end -%>
