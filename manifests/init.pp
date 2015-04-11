@@ -108,6 +108,7 @@ class ezproxy (
   $install_path             = $::ezproxy::params::install_path,
   $ezproxy_url              = $::ezproxy::params::ezproxy_url,
   $download_url             = $::ezproxy::params::download_url,
+  $dependencies             = $::ezproxy::params::dependencies,
   $proxy_by_hostname        = $::ezproxy::params::proxy_by_hostname,
   $first_port               = $::ezproxy::params::first_port,
   $auto_login_ips           = $::ezproxy::params::auto_login_ips,
