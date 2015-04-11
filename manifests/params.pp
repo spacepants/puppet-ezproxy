@@ -40,8 +40,8 @@ class ezproxy::params {
   $service_enable           = true
   $service_name             = 'ezproxy'
 
-  if getvar('::architecture') == 'amd64' {
-    case getvar('::operatingsystemrelease') {
+  if $::architecture == 'amd64' {
+    case $::operatingsystemrelease {
       '13.04', '14.04': {
         $dependencies = [ 'lib32z1' ]
       }
@@ -49,13 +49,13 @@ class ezproxy::params {
         $dependencies = [ 'ia32-libs' ]
       }
     }
-  } elsif getvar('::architecture') == 'x86_64' {
+  } elsif $::architecture == 'x86_64' {
     $dependencies = [ 'glibc.i686' ]
   } else {
     $dependencies = []
   }
 
-  case getvar('::osfamily') {
+  case $::osfamily {
     'Debian': {
       $ezproxy_shell = '/usr/sbin/nologin'
     }
