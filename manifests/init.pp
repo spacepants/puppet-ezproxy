@@ -90,6 +90,9 @@
 #   Hash of database stanzas to include.
 #   More info in manifests/stanza.pp.
 #
+# [*manage_service*]
+#   Boolean for whether or not to manage the service.
+#
 # [*service_name*]
 #   Name of the startup script to use.
 #
@@ -130,6 +133,7 @@ class ezproxy (
   $ldap_url                 = $::ezproxy::params::ldap_url,
   $default_stanzas          = $::ezproxy::params::default_stanzas,
   $stanzas                  = $::ezproxy::params::stanzas,
+  $manage_service           = $::ezproxy::params::manage_service,
   $service_name             = $::ezproxy::params::service_name,
   $service_status           = $::ezproxy::params::service_status,
   $service_enable           = $::ezproxy::params::service_enable,
@@ -197,6 +201,7 @@ class ezproxy (
   }
   validate_bool($default_stanzas)
   validate_hash($stanzas)
+  validate_bool($manage_service)
   validate_string($service_name)
   validate_re($service_status, [ '^running', '^stopped' ])
   validate_bool($service_enable)

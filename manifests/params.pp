@@ -34,6 +34,7 @@ class ezproxy::params {
   $ldap_url                 = undef
   $default_stanzas          = true
   $stanzas                  = {}
+  $manage_service           = true
   $service_status           = running
   $service_enable           = true
 
