@@ -40,4 +40,5 @@ class ezproxy::config {
     }
   }
   create_resources(ezproxy::stanza, $::ezproxy::stanzas, {})
+  create_resources(ezproxy::remote_config, $::ezproxy::remote_configs, {})
 }

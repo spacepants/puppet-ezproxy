@@ -1,7 +1,7 @@
 # == Define ezproxy::remote_config
 #
-# This define downloads a config file from a remote host to be included in the
-# sites.txt config file.
+# This define downloads a config file from a remote host and
+# includes it in the sites.txt config file.
 #
 # === Parameters
 #
@@ -9,7 +9,8 @@
 #   URL of the config file to download.
 #
 # [*file_name*]
-#   File name to download as. Also used as the source for the concat fragment.
+#   File name to download as. Also used as the source for the
+#   concat fragment.
 #
 # [*order*]
 #   Include order for the stanza.
@@ -37,7 +38,6 @@ define ezproxy::remote_config (
     target  => 'ezproxy sites',
     source  => "${::ezproxy::install_path}/${file_name}",
     order   => $order,
-    require => Exec["download ${name} config"],
-    notify  => Service[$::ezproxy::service_name]
+    require => Exec["download ${name} config"]
   }
 }

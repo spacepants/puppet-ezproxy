@@ -132,6 +132,7 @@ class ezproxy (
   $ldap_options             = $::ezproxy::params::ldap_options,
   $ldap_url                 = $::ezproxy::params::ldap_url,
   $default_stanzas          = $::ezproxy::params::default_stanzas,
+  $remote_configs           = $::ezproxy::params::remote_configs,
   $stanzas                  = $::ezproxy::params::stanzas,
   $manage_service           = $::ezproxy::params::manage_service,
   $service_name             = $::ezproxy::params::service_name,
@@ -201,6 +202,7 @@ class ezproxy (
   }
   validate_bool($default_stanzas)
   validate_hash($stanzas)
+  validate_hash($remote_configs)
   validate_bool($manage_service)
   validate_string($service_name)
   validate_re($service_status, [ '^running', '^stopped' ])
