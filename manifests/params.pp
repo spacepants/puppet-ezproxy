@@ -51,6 +51,8 @@ class ezproxy::params {
     }
   } elsif getvar('::architecture') == 'x86_64' {
     $dependencies = [ 'glibc.i686' ]
+  } else {
+    $dependencies = []
   }
 
   case getvar('::osfamily') {
