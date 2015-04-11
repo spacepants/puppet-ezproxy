@@ -38,21 +38,27 @@ class ezproxy::params {
   $manage_service           = true
   $service_status           = running
   $service_enable           = true
+  $service_name             = 'ezproxy'
+
+  if $::architecture == 'amd64' {
+    case $::operatingsystemrelease {
+      '13.04', '14.04': {
+        $dependencies = [ 'lib32z1' ]
+      }
+      default: {
+        $dependencies = [ 'ia32-libs' ]
+      }
+    }
+  } elsif $::architecture == 'x86_64' {
+    $dependencies = [ 'glibc.i686' ]
+  }
 
   case $::osfamily {
     'Debian': {
       $ezproxy_shell = '/usr/sbin/nologin'
-      $service_name  = 'ezproxy'
-      if $::architecture == 'x86_64' {
-        $dependencies = [ 'ia32-libs' ]
-      }
     }
-    'RedHat', 'Amazon': {
+    'RedHat': {
       $ezproxy_shell = '/sbin/nologin'
-      $service_name = 'ezproxy'
-      if $::architecture == 'x86_64' {
-        $dependencies = [ 'glibc.i686' ]
-      }
     }
     default: {
       fail("${::operatingsystem} not supported")
