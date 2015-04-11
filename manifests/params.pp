@@ -41,12 +41,14 @@ class ezproxy::params {
 
   case $::osfamily {
     'Debian': {
-      $service_name = 'ezproxy'
+      $ezproxy_shell = '/usr/sbin/nologin'
+      $service_name  = 'ezproxy'
       if $::architecture == 'x86_64' {
         $dependencies = [ 'ia32-libs' ]
       }
     }
     'RedHat', 'Amazon': {
+      $ezproxy_shell = '/sbin/nologin'
       $service_name = 'ezproxy'
       if $::architecture == 'x86_64' {
         $dependencies = [ 'glibc.i686' ]
