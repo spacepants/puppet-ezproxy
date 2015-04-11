@@ -5,9 +5,7 @@ describe 'ezproxy' do
     on_supported_os.each do |os, facts|
       context "on #{os}" do
         let(:facts) do
-          facts.merge({
-            :concat_basedir  => '/var/lib/puppet/concat'
-          })
+          facts.merge( { :concat_basedir => '/var/lib/puppet/concat' } )
         end
 
         context "ezproxy class without any parameters" do
@@ -47,6 +45,72 @@ describe 'ezproxy' do
     end
   end
 
+  context 'OS/arch specific default params' do
+    let(:params) {{ }}
+    context 'ezproxy class without any parameters on RedHat family systems' do
+      let(:facts) {{
+        :osfamily       => 'RedHat',
+        :concat_basedir => '/var/lib/puppet/concat',
+      }}
+
+      it { is_expected.to contain_user('ezproxy').with_shell('/sbin/nologin') }
+
+      context 'on 64 bit EL systems' do
+        let(:facts) {{
+          :osfamily       => 'RedHat',
+          :architecture   => 'x86_64',
+          :concat_basedir => '/var/lib/puppet/concat',
+        }}
+
+        it { is_expected.to contain_package('glibc.i686').with_ensure('installed') }
+      end
+    end
+
+    context 'ezproxy class without any parameters on Debian family systems' do
+      let(:facts) {{
+        :osfamily       => 'Debian',
+        :concat_basedir => '/var/lib/puppet/concat',
+      }}
+
+      it { is_expected.to contain_user('ezproxy').with_shell('/usr/sbin/nologin') }
+
+      context 'on 64 bit Debian systems' do
+        let(:facts) {{
+          :osfamily        => 'Debian',
+          :architecture    => 'amd64',
+          :operatingsystem => 'Debian',
+          :concat_basedir  => '/var/lib/puppet/concat',
+        }}
+
+        it { is_expected.to contain_package('ia32-libs').with_ensure('installed') }
+      end
+
+      context 'on 64 bit Ubuntu systems running 12.04' do
+        let(:facts) {{
+          :osfamily               => 'Debian',
+          :architecture           => 'amd64',
+          :operatingsystem        => 'Ubuntu',
+          :operatingsystemrelease => '12.04',
+          :concat_basedir         => '/var/lib/puppet/concat',
+        }}
+
+        it { is_expected.to contain_package('ia32-libs').with_ensure('installed') }
+      end
+
+      context 'on 64 bit Ubuntu systems running 14.04' do
+        let(:facts) {{
+          :osfamily               => 'Debian',
+          :architecture           => 'amd64',
+          :operatingsystem        => 'Ubuntu',
+          :operatingsystemrelease => '14.04',
+          :concat_basedir         => '/var/lib/puppet/concat',
+        }}
+
+        it { is_expected.to contain_package('lib32z1').with_ensure('installed') }
+      end
+    end
+  end
+
   context 'unsupported operating system' do
     describe 'ezproxy class without any parameters on Solaris/Nexenta' do
       let(:facts) {{
@@ -54,7 +118,7 @@ describe 'ezproxy' do
         :operatingsystem => 'Nexenta',
       }}
 
-      it { expect { is_expected.to contain_service('ezproxy') }.to raise_error(Puppet::Error, /Nexenta not supported/) }
+      it { expect { is_expected.to contain_class('ezproxy') }.to raise_error(Puppet::Error, /Nexenta not supported/) }
     end
   end
 end
