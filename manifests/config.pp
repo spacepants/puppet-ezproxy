@@ -39,4 +39,5 @@ class ezproxy::config {
       hide    => true,
     }
   }
+  create_resources(ezproxy::stanza, $::ezproxy::stanzas, {})
 }

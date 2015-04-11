@@ -77,6 +77,5 @@ define ezproxy::stanza (
     target  => 'ezproxy sites',
     content => template('ezproxy/stanza.erb'),
     order   => $order,
-    notify  => Service[$::ezproxy::service_name]
   }
 }
