@@ -49,7 +49,7 @@ IfUser <%= this_admin %>; Admin
 <%= this_option %>
 <% end -%>
 <% end -%>
-<%= @ldap_url %>
+URL <%= @ldap_url %>
 IfUnauthenticated; Stop
 <% if @admins -%>
 <% @admins.each do |this_admin| -%>
