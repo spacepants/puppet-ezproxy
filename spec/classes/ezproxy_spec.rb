@@ -185,7 +185,6 @@ describe 'ezproxy' do
       }}
 
       it { is_expected.to contain_file('/usr/local/ezproxy/user.txt').with_content(/LoginURL https:\/\/my\.cas\.server\/login\nServiceValidateURL https:\/\/my\.cas\.server\/serviceValidate\nIfUser casadmin1; Admin\nIfUser casadmin2; Admin/) }
-
     end
 
     context "ezproxy class with ldap authentication" do
@@ -197,7 +196,15 @@ describe 'ezproxy' do
       }}
 
       it { is_expected.to contain_file('/usr/local/ezproxy/user.txt').with_content(/::LDAP\nBindUser CN=ezproxy,DC=mydomain,DC=edu\nBindPassword supersecret\nURL ldap:\/\/ldap\.mydomain\.edu\/dc=mydomain,dc=edu\?uid\nIfUnauthenticated; Stop\nIfUser ldapadmin1; Admin\nIfUser ldapadmin2; Admin/) }
+    end
 
+    context "ezproxy class with with proxy_by_hostname enabled" do
+      let(:params) {{
+        'proxy_by_hostname' => true
+      }}
+
+      it { is_expected.to contain_file('/usr/local/ezproxy/config.txt').with_content(/Option ProxyByHostname/) }
+      it { is_expected.not_to contain_file('/usr/local/ezproxy/config.txt').with_content(/FirstPort/) }
     end
 
     context "ezproxy class with with service management disabled" do
@@ -206,7 +213,6 @@ describe 'ezproxy' do
       }}
 
       it { is_expected.not_to contain_service('ezproxy') }
-
     end
   end
 
