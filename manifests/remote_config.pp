@@ -38,7 +38,7 @@ define ezproxy::remote_config (
     command     => "dos2unix ${::ezproxy::install_path}/${file_name}",
     path        => '/sbin:/bin:/usr/sbin:/usr/bin',
     refreshonly => true,
-    require     => Exec["sanitize ${name} config"]
+    require     => Exec["download ${name} config"]
   }
 
   concat::fragment { $name:
