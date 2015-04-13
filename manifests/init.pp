@@ -86,6 +86,10 @@
 # [*default_stanzas*]
 #   Boolean for whether or not to include the default databases from OCLC.
 #
+# [*remote_configs*]
+#   Hash of remote config stanzas to include.
+#   More info in manifests/remote_config.pp.
+#
 # [*stanzas*]
 #   Hash of database stanzas to include.
 #   More info in manifests/stanza.pp.
