@@ -43,16 +43,16 @@ class ezproxy::params {
   if $::architecture == 'amd64' {
     case $::operatingsystemrelease {
       '13.04', '14.04': {
-        $dependencies = [ 'lib32z1' ]
+        $dependencies = [ 'lib32z1', 'dos2unix' ]
       }
       default: {
-        $dependencies = [ 'ia32-libs' ]
+        $dependencies = [ 'ia32-libs', 'dos2unix' ]
       }
     }
   } elsif $::architecture == 'x86_64' {
-    $dependencies = [ 'glibc.i686' ]
+    $dependencies = [ 'glibc.i686', 'dos2unix' ]
   } else {
-    $dependencies = []
+    $dependencies = [ 'dos2unix' ]
   }
 
   case $::osfamily {

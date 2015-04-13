@@ -14,6 +14,9 @@ describe 'ezproxy::remote_config', :type => :define do
       'command' => 'curl -o /sample_config http://www.test.url/path/to/config',
       'creates' => '/sample_config',
     }) }
+    it { is_expected.to contain_exec('sanitize sample config').with({
+      'command' => 'dos2unix /sample_config',
+    }) }
     it { is_expected.to contain_concat__fragment('sample').with({
       'ensure' => 'present',
       'target' => 'ezproxy sites',

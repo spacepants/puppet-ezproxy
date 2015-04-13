@@ -21,6 +21,7 @@ describe 'ezproxy' do
           it { is_expected.to contain_group('ezproxy').with_ensure('present') }
           it { is_expected.to contain_user('ezproxy').with_ensure('present') }
           it { is_expected.to contain_file('/usr/local/ezproxy').with_ensure('directory') }
+          it { is_expected.to contain_package('dos2unix').with_ensure('installed') }
           it { is_expected.to contain_exec('download ezproxy').with_creates('/usr/local/ezproxy/ezproxy') }
           it { is_expected.to contain_file('/usr/local/ezproxy/ezproxy').with_mode('0755') }
           it { is_expected.to contain_exec('bootstrap ezproxy').with_refreshonly(true) }
