@@ -169,21 +169,23 @@ describe 'ezproxy' do
       let(:params) {{
         'cas'                      => true,
         'cas_login_url'            => 'https://my.cas.server/login',
-        'cas_service_validate_url' => 'https://my.cas.server/service-validate',
+        'cas_service_validate_url' => 'https://my.cas.server/serviceValidate',
+        'admins'                   => [ 'casadmin1', 'casadmin2' ],
       }}
 
-      it { is_expected.to contain_file('/usr/local/ezproxy/user.txt').with_content(/::CAS/) }
+      it { is_expected.to contain_file('/usr/local/ezproxy/user.txt').with_content(/LoginURL https:\/\/my\.cas\.server\/login\nServiceValidateURL https:\/\/my\.cas\.server\/serviceValidate\nIfUser casadmin1; Admin\nIfUser casadmin2; Admin/) }
 
     end
 
     context "ezproxy class with ldap authentication" do
       let(:params) {{
         'ldap'         => true,
-        'ldap_options' => [],
-        'ldap_url'     => 'my.ldap.url',
+        'ldap_options' => [ 'BindUser CN=ezproxy,DC=mydomain,DC=edu', 'BindPassword supersecret' ],
+        'ldap_url'     => 'ldap://ldap.mydomain.edu/dc=mydomain,dc=edu?uid',
+        'admins'       => [ 'ldapadmin1', 'ldapadmin2' ],
       }}
 
-      it { is_expected.to contain_file('/usr/local/ezproxy/user.txt').with_content(/::LDAP/) }
+      it { is_expected.to contain_file('/usr/local/ezproxy/user.txt').with_content(/::LDAP\nBindUser CN=ezproxy,DC=mydomain,DC=edu\nBindPassword supersecret\nURL ldap:\/\/ldap\.mydomain\.edu\/dc=mydomain,dc=edu\?uid\nIfUnauthenticated; Stop\nIfUser ldapadmin1; Admin\nIfUser ldapadmin2; Admin/) }
 
     end
 
