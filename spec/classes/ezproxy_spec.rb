@@ -125,7 +125,6 @@ describe 'ezproxy' do
         'ezproxy_url'       => 'my.ezproxy.url',
         'download_url'      => 'http://my.ezproxy.download/link',
         'dependencies'      => [ 'package1', 'package2' ],
-        'proxy_by_hostname' => true,
         'first_port'        => 9001,
         'auto_login_ips'    => [ '1.0.0.0-1.255.255.255', '2.0.0.0-2.255.255.255' ],
         'include_ips'       => [ '3.0.0.0-3.255.255.255', '4.0.0.0-4.255.255.255' ],
@@ -141,7 +140,6 @@ describe 'ezproxy' do
         'log_format'        => '%t %h %l %u "%r" %s %b "%{Referer}i" "%{user-agent}i"',
         'log_file'          => '/var/log/ezproxy/ezproxy.log',
         'local_users'       => [ 'user1:supersecure:admin', 'user2:coolpass:admin' ],
-        'admins'            => [ 'user3', 'user4', 'user5' ],
         'default_stanzas'   => false,
         'service_name'      => 'custom-service',
         'service_status'    => 'stopped',
@@ -155,8 +153,21 @@ describe 'ezproxy' do
       it { is_expected.to contain_package('package2').with_ensure('installed') }
       it { is_expected.to contain_exec('download ezproxy').with_creates('/custom/install/path/ezproxy') }
       it { is_expected.to contain_file('/custom/install/path/ezproxy').with_mode('0755') }
-      it { is_expected.to contain_file('/custom/install/path/user.txt').with_ensure('file') }
-      it { is_expected.to contain_file('/custom/install/path/config.txt').with_ensure('file') }
+      it { is_expected.to contain_file('/custom/install/path/user.txt').with_content(/user1:supersecure:admin\nuser2:coolpass:admin/) }
+      it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/RunAs custom_user:custom_group/) }
+      it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/Name my.ezproxy.url/) }
+      it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/FirstPort 9001/) }
+      it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/A 1.0.0.0-1.255.255.255\nA 2.0.0.0-2.255.255.255/) }
+      it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/I 3.0.0.0-3.255.255.255\nI 4.0.0.0-4.255.255.255/) }
+      it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/E 5.0.0.0-5.255.255.255\nE 6.0.0.0-6.255.255.255/) }
+      it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/LoginPort 8080/) }
+      it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/LoginPortSSL 443\nOption ForceHTTPSLogin\nOption ForceHTTPSAdmin/) }
+      it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/MaxLifetime 360/) }
+      it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/MaxSessions 1000/) }
+      it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/MaxVirtualHosts 5000/) }
+      it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/LogFilter \*\.gif\*\nLogFilter \*\.jpg\*/) }
+      it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/LogFile \/var\/log\/ezproxy\/ezproxy\.log/) }
+      it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/LogFormat %t %h %l %u "%r" %s %b "%{Referer}i" "%{user-agent}i/) }
       it { is_expected.to contain_concat('ezproxy sites').with_path('/custom/install/path/sites.txt') }
       it { is_expected.not_to contain_concat__fragment('Worldcat.org').with_ensure('present') }
       it { is_expected.not_to contain_concat__fragment('WhatIsMyIP').with_ensure('present') }
