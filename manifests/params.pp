@@ -8,7 +8,7 @@ class ezproxy::params {
   $ezproxy_user             = 'ezproxy'
   $install_path             = '/usr/local/ezproxy'
   $ezproxy_url              = $::fqdn
-  $download_url             = 'https://www.oclc.org/content/dam/support/ezproxy/documentation/download/binaries/6/ezproxy-linux.bin'
+  $download_url             = 'https://www.oclc.org/content/dam/support/ezproxy/documentation/download/binaries/5-7-44/ezproxy-linux.bin'
   $proxy_by_hostname        = false
   $first_port               = '5000'
   $auto_login_ips           = []
