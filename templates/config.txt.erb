@@ -66,7 +66,9 @@ E <%= this_exclude_ip %>
 
 ##  By default, EZproxy listens on port 2048. You can specify a different port here
 # LoginPort 80
+<% if @login_port -%>
 LoginPort <%= @login_port %>
+<% end -%>
 
 ##  SSL == see: http://www.oclc.org/support/documentation/ezproxy/cfg/ssl/
 ##  If using Proxy by HostName you must use a wildcard SSL certificate
