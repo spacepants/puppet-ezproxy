@@ -32,7 +32,7 @@ describe 'ezproxy' do
           it { is_expected.to contain_ezproxy__stanza('WhatIsMyIP') }
           it { is_expected.to contain_ezproxy__stanza('DOI System').with_hide(true) }
 
-          it { is_expected.to contain_file('/etc/init.d/ezproxy').with_content(/su - ezproxy "\$EZPROXY \$\*"\n$/) }
+          it { is_expected.to contain_file('/etc/init.d/ezproxy').with_content(/\/usr\/local\/ezproxy\/ezproxy \$\*\n$/) }
           it { is_expected.to contain_service('ezproxy').with_ensure('running') }
 
           it { is_expected.to contain_class('concat::setup') }
@@ -173,7 +173,7 @@ describe 'ezproxy' do
       it { is_expected.not_to contain_concat__fragment('Worldcat.org').with_ensure('present') }
       it { is_expected.not_to contain_concat__fragment('WhatIsMyIP').with_ensure('present') }
       it { is_expected.not_to contain_concat__fragment('DOI System').with_ensure('present') }
-      it { is_expected.to contain_file('/etc/init.d/custom-service').with_content(/su - custom_user "\$EZPROXY \$\*"$\n/) }
+      it { is_expected.to contain_file('/etc/init.d/custom-service').with_content(/\/custom\/install\/path\/ezproxy \$\*\n$/) }
       it { is_expected.to contain_service('custom-service').with_ensure('stopped') }
     end
 
