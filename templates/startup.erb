@@ -14,5 +14,4 @@ then
   exit 1
 fi
 
-EZPROXY=<%= @install_path %>/ezproxy
-su - <%= @ezproxy_user %> "$EZPROXY $*"
+<%= @install_path %>/ezproxy $*
