@@ -37,6 +37,7 @@ describe 'ezproxy class' do
       it { is_expected.to be_file }
     end
 
+    # ezproxy requires a license on startup which we can't test ephemerally
     describe service('ezproxy') do
       it { is_expected.not_to be_enabled }
       it { is_expected.not_to be_running }
