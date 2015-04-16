@@ -4,9 +4,9 @@
   "author": "Paul Bailey",
   "summary": "Module for installing and configuring EZProxy.",
   "license": "Apache-2.0",
-  "source": "",
-  "project_page": "",
-  "issues_url": "",
+  "source": "https://github.com/spacepants/puppet-ezproxy.git",
+  "project_page": "https://github.com/spacepants/puppet-ezproxy",
+  "issues_url": "https://github.com/spacepants/puppet-ezproxy/issues",
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
