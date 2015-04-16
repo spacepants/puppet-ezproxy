@@ -63,7 +63,7 @@
 #   Array of local users to include.
 #
 # [*admins*]
-#   Array of local users to include.
+#   Array of ldap or cas users to pass to admin.
 #
 # [*cas*]
 #   Boolean for whether or not to authenticate via CAS.
