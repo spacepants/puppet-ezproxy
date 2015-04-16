@@ -39,8 +39,6 @@ By default, this module will manage:
 * `$INSTALL_PATH/sites.txt` which is built out of file fragments for each individual EZProxy entry
 * the `/etc/init.d/ezproxy` script for service management
 
-### Beginning with ezproxy
-
 ## Usage
 
 This module contains a single public class:
@@ -48,6 +46,7 @@ This module contains a single public class:
 ```puppet
 class { 'ezproxy': }
 ```
+
 You'll probably want to provide a few basic parameters for your particular environment:
 
 ```puppet
@@ -69,6 +68,7 @@ ezproxy::remote_config { 'Oxford Journals':
   file_name     => 'oxford_journals',
 }
 ```
+
 Note that the downloaded config fill will get passed through `dos2unix` in order to strip out any potential Windows file artifacts.
 
 ```puppet
@@ -77,6 +77,32 @@ ezproxy::stanza { 'FirstSearch':
   hosts   => [ 'firstsearch.oclc.org' ],
   domains => [ 'oclc.org' ],
 }
+```
+
+## Usage with Hiera
+You can do all of the above through Hiera as well as pass in a hash of EZProxy stanzas or remote configs. That would look like this:
+
+```yaml
+---
+ezproxy::ezproxy_url: 'ezproxy.myinstitution.edu'
+ezproxy::proxy_by_hostname: true
+ezproxy::login_port: '80'
+ezproxy::max_sessions: '1000'
+ezproxy::max_vhosts: '2500'
+ezproxy::local_users:
+  - user1:supersecure:admin
+ezproxy::remote_configs:
+  Oxford Journals:
+    download_link: 'http://www.oxfordjournals.org/help/techinfo/ezproxyconfig.txt'
+    file_name: 'oxford_journals'
+ezproxy::stanzas:
+  FirstSearch:
+    urls:
+      - http://firstsearch.oclc.org/FSIP
+    hosts:
+      - firstsearch.oclc.org
+    domains:
+      - oclc.org
 ```
 
 ## Limitations
