@@ -1,3 +1,5 @@
+# EZProxy Puppet Module
+
 [![Build Status](https://secure.travis-ci.org/spacepants/puppet-ezproxy.svg)](https://travis-ci.org/spacepants/puppet-ezproxy)
 
 #### Table of Contents
@@ -15,48 +17,72 @@
 
 ## Overview
 
-A one-maybe-two sentence summary of what the module does/what problem it solves. This is your 30 second elevator pitch for your module. Consider including OS/Puppet version it works with.
+Puppet module for installing, configuring, and managing [OCLC's EZProxy](https://www.oclc.org/ezproxy.en.html).
 
 ## Module Description
 
-If applicable, this section should have a brief description of the technology the module integrates with and what that integration enables. This section should answer the questions: "What does this module *do*?" and "Why would I use it?"
+This module manages the installation and configuration of EZProxy and any dependencies and allows you to work with proxy stanzas in a more structured format.
 
-If your module has a range of functionality (installation, configuration, management, etc.) this is the time to mention it.
+Individual databases and sites are built into file fragments which are then concatenated together. You can also specify a remote url to use as a source for things like Sage or Oxford Journals.
 
 ## Setup
 
 ### What ezproxy affects
 
-* A list of files, packages, services, or operations that the module will alter, impact, or execute on the system it's installed on.
-* This is a great place to stick any warnings.
-* Can be in list or paragraph form.
-
-### Setup Requirements **OPTIONAL**
-
-If your module requires anything extra before setting up (pluginsync enabled, etc.), mention it here.
+By default, this module will manage:
+* the `ezproxy` user
+* the EZProxy install directory exists (defaults to `/usr/local/ezproxy`)
+* the `ezproxy` binary is downloaded with the correct mode and permissions
+* any applicable dependency packages (i.e. `ialibs-32` or `glibc.i686` for 64-bit systems, `dos2unix` for config file sanitization)
+* `$INSTALL_PATH/config.txt` which handles all of the EZProxy configuration
+* `$INSTALL_PATH/user.txt`
+* `$INSTALL_PATH/sites.txt` which is built out of file fragments for each individual EZProxy entry
+* the `/etc/init.d/ezproxy` script for service management
 
 ### Beginning with ezproxy
 
-The very basic steps needed for a user to get the module up and running.
-
-If your most recent release breaks compatibility or requires particular steps for upgrading, you may wish to include an additional section here: Upgrading (For an example, see http://forge.puppetlabs.com/puppetlabs/firewall).
-
 ## Usage
 
-Put the classes, types, and resources for customizing, configuring, and doing the fancy stuff with your module here.
+This module contains a single public class:
 
-## Reference
+```puppet
+class { 'ezproxy': }
+```
+You'll probably want to provide a few basic parameters for your particular environment:
 
-Here, list the classes, types, providers, facts, etc contained in your module. This section should include all of the under-the-hood workings of your module so people know what the module is touching on their system but don't need to mess with things. (We are working on automating this section!)
+```puppet
+class { 'ezproxy':
+  ezproxy_url       => 'ezproxy.myinstitution.edu',
+  proxy_by_hostname => true,
+  login_port        => '80',
+  max_sessions      => '1000',
+  max_vhosts        => '2500',
+  local_users       => [ 'user1:supersecure:admin', ],
+}
+```
+
+There are also two defined types for creating EZProxy stanzas depending on whether you want to provide the values yourself or grab a provided config file from a URL.
+
+```puppet
+ezproxy::remote_config { 'Oxford Journals':
+  download_link => 'http://www.oxfordjournals.org/help/techinfo/ezproxyconfig.txt',
+  file_name     => 'oxford_journals',
+}
+```
+Note that the downloaded config fill will get passed through `dos2unix` in order to strip out any potential Windows file artifacts.
+
+```puppet
+ezproxy::stanza { 'FirstSearch':
+  urls    => [ 'http://firstsearch.oclc.org/FSIP' ],
+  hosts   => [ 'firstsearch.oclc.org' ],
+  domains => [ 'oclc.org' ],
+}
+```
 
 ## Limitations
 
-This is where you list OS compatibility, version compatibility, etc.
+This module is currently tested and working with EZProxy 5.7 and 6 on RedHat and CentOS 5, 6, and 7, Debian 6 and 7, and Ubuntu 12.04 and 14.04 systems.
 
 ## Development
 
-Since your module is awesome, other users will want to play with it. Let them know what the ground rules for contributing are.
-
-## Release Notes/Contributors/Etc **Optional**
-
-If you aren't using changelog, put your release notes here (though you should consider using changelog). You may also add any additional sections you feel are necessary or important to include here. Please use the `## ` header.
+Pull requests are totally welcome. If you'd like to contribute other features or anything else, check out the contributing guidelines in CONTRIBUTING.md.
