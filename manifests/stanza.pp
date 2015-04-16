@@ -73,7 +73,6 @@ define ezproxy::stanza (
   validate_string($order)
 
   concat::fragment { $name:
-    ensure  => present,
     target  => 'ezproxy sites',
     content => template('ezproxy/stanza.erb'),
     order   => $order,

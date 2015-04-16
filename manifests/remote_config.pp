@@ -42,7 +42,6 @@ define ezproxy::remote_config (
   }
 
   concat::fragment { $name:
-    ensure  => present,
     target  => 'ezproxy sites',
     source  => "${::ezproxy::install_path}/${file_name}",
     order   => $order,
