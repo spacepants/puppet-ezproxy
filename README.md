@@ -79,8 +79,122 @@ ezproxy::stanza { 'FirstSearch':
 }
 ```
 
+## Authenticating via LDAP or CAS
+
+Aside from local user authentication, you can also set up LDAP or CAS authentication with a couple of parameters.
+
+### Configuring LDAP
+
+If you want to set up basic anonymous LDAP authentication, you can do so like this:
+
+```puppet
+class { 'ezproxy':
+  ezproxy_url => 'ezproxy.myinstitution.edu',
+  ldap        => true,
+  ldap_url    => 'ldap://ldap.myinstitution.edu/CN=users,DC=myinstitution,DC=edu?uid?sub?(objectClass=person)',
+}
+```
+
+This would add the following to the `user.txt` file:
+
+```
+::LDAP
+URL ldap://ldap.myinstitution.edu/CN=users,DC=myinstitution,DC=edu?uid?sub?(objectClass=person)
+IfUnauthenticated; Stop
+/LDAP
+```
+
+If you need to add some additional LDAP options, you can do so like this:
+
+```puppet
+class { 'ezproxy':
+  ezproxy_url  => 'ezproxy.myinstitution.edu',
+  ldap         => true,
+  ldap_options => [ 'BindUser CN=ezproxy,CN=users,DC=myinstitution,DC=edu', 'BindPassword verysecret' ],
+  ldap_url     => 'ldap://ldap.myinstitution.edu/CN=users,DC=myinstitution,DC=edu?uid?sub?(objectClass=person)',
+}
+```
+
+This would add the following to the `user.txt` file:
+
+```
+::LDAP
+BindUser CN=ezproxy,CN=users,DC=myinstitution,DC=edu
+BindPassword verysecret
+URL ldap://ldap.myinstitution.edu/CN=users,DC=myinstitution,DC=edu?uid?sub?(objectClass=person)
+IfUnauthenticated; Stop
+/LDAP
+```
+
+If you need to add any LDAP-authenticated admins, you can do so like this:
+
+```puppet
+class { 'ezproxy':
+  ezproxy_url => 'ezproxy.myinstitution.edu',
+  ldap        => true,
+  ldap_url    => 'ldap://ldap.myinstitution.edu/CN=users,DC=myinstitution,DC=edu?uid?sub?(objectClass=person)',
+  admins      => [ 'admin1', 'admin2' ],
+}
+```
+
+This would add the following to the `user.txt` file:
+
+```
+::LDAP
+URL ldap://ldap.myinstitution.edu/CN=users,DC=myinstitution,DC=edu?uid?sub?(objectClass=person)
+IfUnauthenticated; Stop
+IfUser admin1; Admin
+IfUser admin2; Admin
+/LDAP
+```
+
+### Configuring CAS
+
+If you want to set up CAS authentication, you can do so like this:
+
+```puppet
+class { 'ezproxy':
+  ezproxy_url              => 'ezproxy.myinstitution.edu',
+  cas                      => true,
+  cas_login_url            => 'https://cas.myinstitution.edu/cas-web/login',
+  cas_service_validate_url => 'https://cas.myinstitution.edu/cas-web/serviceValidate',
+}
+```
+
+This would add the following to the `user.txt` file:
+
+```
+::CAS
+LoginURL https://cas.myinstitution.edu/cas-web/login
+ServiceValidateURL https://cas.myinstitution.edu/cas-web/serviceValidate
+/CAS
+```
+
+If you need to add any CAS-authenticated admins, you can do so like this:
+
+```puppet
+class { 'ezproxy':
+  ezproxy_url              => 'ezproxy.myinstitution.edu',
+  cas                      => true,
+  cas_login_url            => 'https://cas.myinstitution.edu/cas-web/login',
+  cas_service_validate_url => 'https://cas.myinstitution.edu/cas-web/serviceValidate',
+  admins                   => [ 'admin1', 'admin2' ],
+}
+```
+
+This would add the following to the `user.txt` file:
+
+```
+::CAS
+LoginURL https://cas.myinstitution.edu/cas-web/login
+ServiceValidateURL https://cas.myinstitution.edu/cas-web/serviceValidate
+IfUser admin1; Admin
+IfUser admin2; Admin
+/CAS
+```
+
 ## Usage with Hiera
-You can do all of the above through Hiera as well as pass in a hash of EZProxy stanzas or remote configs. That would look like this:
+You can do any of the above through Hiera as well as pass in a hash of EZProxy stanzas or remote configs. That would look like this:
 
 ```yaml
 ---
