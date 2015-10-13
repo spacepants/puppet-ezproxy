@@ -103,7 +103,16 @@ Option SafariCookiePatch
 Audit Most
 AuditPurge 7
 Option StatusUser
+
+<% if @log_user -%>
+## If LogUser is required then LogSession should not also be included
+## if session identifiers are also required then a custom log format
+## should be specified that includes %{ezproxy-session}
+Option LogUser
+<% else -%>
 Option LogSession
+<% end -%>
+
 IntruderIPAttempts -interval=5 -expires=15 20
 IntruderUserAttempts -interval=5 -expires=15 10
 UsageLimit -enforce -interval=15 -expires=120 -MB=200 Global
