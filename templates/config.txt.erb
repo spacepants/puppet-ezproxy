@@ -119,6 +119,20 @@ LogFilter <%= this_log_filter %>
 LogFile <%= @log_file %>
 LogFormat <%= @log_format %>
 
+## Enable forward proxying to allow EZproxy to access external resources
+## when behind a corporate firewall with no direct access allowed, see
+## https://www.oclc.org/support/services/ezproxy/documentation/cfg/proxy.en.html
+
+<% if @http_proxy -%>
+# Proxy host: port username: password 
+Proxy <%= @http_proxy %>
+<% end -%>
+
+<% if @https_proxy -%>
+# ProxySSL host: port username: password 
+ProxySSL <%= @https_proxy %>
+<% end -%>
+
 # **************************** Database Definitions *****************************************
 ##  See http://www.oclc.org/support/documentation/ezproxy/db/default.htm
 
