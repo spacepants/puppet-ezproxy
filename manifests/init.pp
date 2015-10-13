@@ -112,6 +112,9 @@
 # [*https_proxy*]
 # String for forward proxy configuration for https proxy_hostname:port
 #
+# [*login_cookie_name*]
+# String for alternate cookie name for EZproxy session cookies
+#
 class ezproxy (
   $ezproxy_group            = $::ezproxy::params::ezproxy_group,
   $ezproxy_user             = $::ezproxy::params::ezproxy_user,
@@ -151,6 +154,7 @@ class ezproxy (
   $service_enable           = $::ezproxy::params::service_enable,
   $http_proxy               = $::ezproxy::params::http_proxy,
   $https_proxy              = $::ezproxy::params::https_proxy,
+  $login_cookie_name        = $::ezproxy::params::login_cookie_name,
 ) inherits ::ezproxy::params {
 
   validate_string($ezproxy_group)
