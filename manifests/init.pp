@@ -113,7 +113,7 @@
 # String for forward proxy configuration for https proxy_hostname:port
 #
 # [*login_cookie_name*]
-# String for alternate cookie name for EZproxy session cookies
+# String for alternate cookie name for EZproxy session cookie
 #
 class ezproxy (
   $ezproxy_group            = $::ezproxy::params::ezproxy_group,
