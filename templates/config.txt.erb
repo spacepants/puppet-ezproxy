@@ -97,13 +97,6 @@ MaxVirtualHosts <%= @max_vhosts %>
 ## (2006-03-10) or later, you can add add the following to work around the restriction.
 Option SafariCookiePatch
 
-<% if @login_cookie_name -%>
-## LoginCookieName specifies an alternate name for the EZproxy session cookie.
-## The default name for the EZproxy session cookie is ezproxy.
-
-# LoginCookieName name
-LoginCookieName <%= @login_cookie_name %>
-<% end -%>
 
 ##  Securing EZproxy == see: http://www.oclc.org/support/documentation/ezproxy/example/securing.htm
 
