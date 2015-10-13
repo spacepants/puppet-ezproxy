@@ -106,6 +106,9 @@
 # [*service_enable*]
 #   Boolean for whether or not to start ezproxy on restart.
 #
+# [*login_cookie_name*]
+# String for alternate cookie name for EZproxy session cookie
+#
 class ezproxy (
   $ezproxy_group            = $::ezproxy::params::ezproxy_group,
   $ezproxy_user             = $::ezproxy::params::ezproxy_user,
@@ -143,6 +146,7 @@ class ezproxy (
   $service_name             = $::ezproxy::params::service_name,
   $service_status           = $::ezproxy::params::service_status,
   $service_enable           = $::ezproxy::params::service_enable,
+  $login_cookie_name        = $::ezproxy::params::login_cookie_name,
 ) inherits ::ezproxy::params {
 
   validate_string($ezproxy_group)
@@ -212,6 +216,7 @@ class ezproxy (
   validate_string($service_name)
   validate_re($service_status, [ '^running', '^stopped' ])
   validate_bool($service_enable)
+  validate_string($login_cookie_name)
 
   class { '::ezproxy::install': } ->
   class { '::ezproxy::config': } ~>
