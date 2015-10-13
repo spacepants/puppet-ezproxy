@@ -106,6 +106,11 @@
 # [*service_enable*]
 #   Boolean for whether or not to start ezproxy on restart.
 #
+# [*log_user*]
+#   Boolean for whether or not logging of username should be done. This disables
+#   logging of session, if you require both then %{ezproxy-session} can be included
+#   in the log_format parameter
+# 
 class ezproxy (
   $ezproxy_group            = $::ezproxy::params::ezproxy_group,
   $ezproxy_user             = $::ezproxy::params::ezproxy_user,
@@ -143,6 +148,7 @@ class ezproxy (
   $service_name             = $::ezproxy::params::service_name,
   $service_status           = $::ezproxy::params::service_status,
   $service_enable           = $::ezproxy::params::service_enable,
+  $log_user                 = $::ezproxy::params::log_user,
 ) inherits ::ezproxy::params {
 
   validate_string($ezproxy_group)
@@ -212,6 +218,7 @@ class ezproxy (
   validate_string($service_name)
   validate_re($service_status, [ '^running', '^stopped' ])
   validate_bool($service_enable)
+  validate_bool($log_user)
 
   class { '::ezproxy::install': } ->
   class { '::ezproxy::config': } ~>
