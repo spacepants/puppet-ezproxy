@@ -136,6 +136,15 @@ class ezproxy (
   $ldap                     = $::ezproxy::params::ldap,
   $ldap_options             = $::ezproxy::params::ldap_options,
   $ldap_url                 = $::ezproxy::params::ldap_url,
+  $cgi                      = $::ezproxy::params::cgi,
+  $cgi_url                  = $::ezproxy::params::cgi_url,
+  $ticket_auth              = $::ezproxy::params::ticket_auth,
+  $ticket_acceptgroups      = $::ezproxy::params::ticket_acceptgroups,
+  $ticket_validtime         = $::ezproxy::params::ticket_validtime,
+  $ticket_timeoffset        = $::ezproxy::params::ticket_timeoffset,
+  $ticket_crypt_algorithm   = $::ezproxy::params::ticket_crypt_algorithm,
+  $ticket_secretkey         = $::ezproxy::params::ticket_secretkey,
+  $expiredticket_url        = $::ezproxy::params::expiredticket_url,
   $default_stanzas          = $::ezproxy::params::default_stanzas,
   $remote_configs           = $::ezproxy::params::remote_configs,
   $stanzas                  = $::ezproxy::params::stanzas,
@@ -203,6 +212,49 @@ class ezproxy (
       validate_string($ldap_url)
     } else {
       fail('LDAP authentication requires a valid LDAP URL string.')
+    }
+  }
+  validate_bool($cgi)
+  if $cgi {
+    if $cgi_url {
+      validate_string($cgi_url)
+    } else {
+      fail('CGI authentication requires a valid CGI URL string.')
+    }
+  }
+  validate_bool($ticket_auth)
+  if $ticket_auth {
+    if $ticket_acceptgroups {
+      validate_string($ticket_acceptgroups)
+    } 
+    if $ticket_validtime {
+      if !is_integer($ticket_validtime) {
+        fail('The ticket TimeValid setting must be numeric.')
+      }
+    } 
+    if $ticket_timeoffset {
+      if !is_integer($ticket_timeoffset) {
+        fail('The ticket TimeOffset setting must be numeric.')
+      }
+    }
+    if $ticket_crypt_algorithm {
+      validate_string($ticket_crypt_algorithm)
+      $ticket_crypt_algorithm = upcase($ticket_crypt_algorithm)
+      if !$ticket_crypt_algorithm in ['MD5', 'SHA1', 'SHA256', 'SHA512'] {
+        false('The supported cryptography algorithms for ticket authentication are MD5, SHA1, SHA256, and SHA512.')
+      }
+    } else {
+      fail('You much provide a ticket authentication cryptography algorithm.')
+    }
+    if $ticket_secretkey {
+      validate_string($ticket_secretkey)	
+    } else {
+      fail('You much provide the secret key for ticket authentication.')
+    }
+    if $expiredticket_url {
+      validate_string($expiredticket_url)
+    } else {
+      fail('You must provide a valid URL string for the ticket expiration warning.')
     }
   }
   validate_bool($default_stanzas)
