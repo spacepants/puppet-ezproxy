@@ -74,7 +74,7 @@ TimeValid <%= ticket_validtime %>
 <% if @ticket_timeoffset -%>
 TimeOffset <%= ticket_timeoffset %>
 <% end -%>
-<%= @ticket_crypt_algorithm %> <%= @ticket_secretkey %>
+<%= @ticket_crypt_algorithm.upcase %> <%= @ticket_secretkey %>
 Expired; Deny <%= @expiredticket_url %>
 /Ticket
 <% end -%>
