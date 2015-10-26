@@ -66,13 +66,13 @@ IfUser <%= this_admin %>; Admin
 # TICKET CONFIG
 ::Ticket
 <% if @ticket_acceptgroups -%>
-AcceptGroups <%= ticket_acceptgroups %>
+AcceptGroups <%= @ticket_acceptgroups %>
 <% end -%>
 <% if @ticket_validtime -%>
-TimeValid <%= ticket_validtime %>
+TimeValid <%= @ticket_validtime %>
 <% end -%>
 <% if @ticket_timeoffset -%>
-TimeOffset <%= ticket_timeoffset %>
+TimeOffset <%= @ticket_timeoffset %>
 <% end -%>
 <%= @ticket_crypt_algorithm.upcase %> <%= @ticket_secretkey %>
 Expired; Deny <%= @expiredticket_url %>
