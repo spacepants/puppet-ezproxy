@@ -241,7 +241,7 @@ class ezproxy (
       validate_string($ticket_crypt_algorithm)
       $ticket_crypt_algorithm = upcase($ticket_crypt_algorithm)
       if !$ticket_crypt_algorithm in ['MD5', 'SHA1', 'SHA256', 'SHA512'] {
-        false('The supported cryptography algorithms for ticket authentication are MD5, SHA1, SHA256, and SHA512.')
+        fail('The supported cryptography algorithms for ticket authentication are MD5, SHA1, SHA256, and SHA512.')
       }
     } else {
       fail('You much provide a ticket authentication cryptography algorithm.')
