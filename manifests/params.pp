@@ -33,7 +33,7 @@ class ezproxy::params {
   $ldap_options             = []
   $ldap_url                 = undef
   $default_stanzas          = true
-  $include_files            = undef
+  $include_files            = []
   $stanzas                  = {}
   $remote_configs           = {}
   $manage_service           = true
