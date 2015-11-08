@@ -86,6 +86,9 @@
 # [*default_stanzas*]
 #   Boolean for whether or not to include the default databases from OCLC.
 #
+# [*include_files*]
+#   Array of files to include in config.txt
+#
 # [*remote_configs*]
 #   Hash of remote config stanzas to include.
 #   More info in manifests/remote_config.pp.
@@ -149,6 +152,7 @@ class ezproxy (
   $ticket_secretkey         = $::ezproxy::params::ticket_secretkey,
   $expiredticket_url        = $::ezproxy::params::expiredticket_url,
   $default_stanzas          = $::ezproxy::params::default_stanzas,
+  $include_files            = $::ezproxy::params::include_files,
   $remote_configs           = $::ezproxy::params::remote_configs,
   $stanzas                  = $::ezproxy::params::stanzas,
   $manage_service           = $::ezproxy::params::manage_service,
@@ -262,6 +266,7 @@ class ezproxy (
     }
   }
   validate_bool($default_stanzas)
+  validate_array($include_files)
   validate_hash($stanzas)
   validate_hash($remote_configs)
   validate_bool($manage_service)
