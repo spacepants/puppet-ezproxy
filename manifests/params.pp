@@ -39,6 +39,7 @@ class ezproxy::params {
   $service_status           = running
   $service_enable           = true
   $service_name             = 'ezproxy'
+  $login_cookie_name        = undef
 
   if $::architecture == 'amd64' {
     case $::operatingsystemrelease {
