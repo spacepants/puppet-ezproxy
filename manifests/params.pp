@@ -32,6 +32,15 @@ class ezproxy::params {
   $ldap                     = false
   $ldap_options             = []
   $ldap_url                 = undef
+  $cgi                      = false
+  $cgi_url                  = undef
+  $ticket_auth              = false
+  $ticket_acceptgroups      = undef
+  $ticket_validtime         = undef
+  $ticket_timeoffset        = undef
+  $ticket_crypt_algorithm   = undef
+  $ticket_secretkey         = undef
+  $expiredticket_url        = 'expired.html'
   $default_stanzas          = true
   $stanzas                  = {}
   $remote_configs           = {}
