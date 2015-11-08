@@ -112,6 +112,12 @@
 # [*login_cookie_name*]
 # String for alternate cookie name for EZproxy session cookie
 #
+# [*http_proxy*]
+# String for forward proxy configuration for http proxy_hostname:port
+#
+# [*https_proxy*]
+# String for forward proxy configuration for https proxy_hostname:port
+#
 class ezproxy (
   $ezproxy_group            = $::ezproxy::params::ezproxy_group,
   $ezproxy_user             = $::ezproxy::params::ezproxy_user,
@@ -160,6 +166,8 @@ class ezproxy (
   $service_status           = $::ezproxy::params::service_status,
   $service_enable           = $::ezproxy::params::service_enable,
   $login_cookie_name        = $::ezproxy::params::login_cookie_name,
+  $http_proxy               = $::ezproxy::params::http_proxy,
+  $https_proxy              = $::ezproxy::params::https_proxy,
 ) inherits ::ezproxy::params {
 
   validate_string($ezproxy_group)
@@ -234,12 +242,12 @@ class ezproxy (
   if $ticket_auth {
     if $ticket_acceptgroups {
       validate_string($ticket_acceptgroups)
-    } 
+    }
     if $ticket_validtime {
       if !is_integer($ticket_validtime) {
         fail('The ticket TimeValid setting must be numeric.')
       }
-    } 
+    }
     if $ticket_timeoffset {
       if !is_integer($ticket_timeoffset) {
         fail('The ticket TimeOffset setting must be numeric.')
@@ -255,7 +263,7 @@ class ezproxy (
       fail('You much provide a ticket authentication cryptography algorithm.')
     }
     if $ticket_secretkey {
-      validate_string($ticket_secretkey)	
+      validate_string($ticket_secretkey)
     } else {
       fail('You much provide the secret key for ticket authentication.')
     }
@@ -274,6 +282,8 @@ class ezproxy (
   validate_re($service_status, [ '^running', '^stopped' ])
   validate_bool($service_enable)
   validate_string($login_cookie_name)
+  validate_string($http_proxy)
+  validate_string($https_proxy)
 
   class { '::ezproxy::install': } ->
   class { '::ezproxy::config': } ~>
