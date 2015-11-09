@@ -170,15 +170,9 @@ class ezproxy (
   $service_name             = $::ezproxy::params::service_name,
   $service_status           = $::ezproxy::params::service_status,
   $service_enable           = $::ezproxy::params::service_enable,
-<<<<<<< HEAD
-  $http_proxy               = $::ezproxy::params::http_proxy,
-  $https_proxy              = $::ezproxy::params::https_proxy,
-  $login_cookie_name        = $::ezproxy::params::login_cookie_name,
-=======
   $login_cookie_name        = $::ezproxy::params::login_cookie_name,
   $http_proxy               = $::ezproxy::params::http_proxy,
   $https_proxy              = $::ezproxy::params::https_proxy,
->>>>>>> d06407a3b8ebd2dbf42dd3b0783b9ae29f835716
   $log_user                 = $::ezproxy::params::log_user,
 ) inherits ::ezproxy::params {
 
@@ -293,15 +287,9 @@ class ezproxy (
   validate_string($service_name)
   validate_re($service_status, [ '^running', '^stopped' ])
   validate_bool($service_enable)
-<<<<<<< HEAD
-  validate_string($http_proxy)
-  validate_string($https_proxy)
-  validate_string($login_cookie_name)
-=======
   validate_string($login_cookie_name)
   validate_string($http_proxy)
   validate_string($https_proxy)
->>>>>>> d06407a3b8ebd2dbf42dd3b0783b9ae29f835716
   validate_bool($log_user)
 
   class { '::ezproxy::install': } ->
