@@ -49,9 +49,9 @@ class ezproxy::params {
   $service_status           = running
   $service_enable           = true
   $service_name             = 'ezproxy'
+  $login_cookie_name        = undef
   $http_proxy               = undef
   $https_proxy              = undef
-  $login_cookie_name        = undef
   $log_user                 = false
 
   if $::architecture == 'amd64' {
