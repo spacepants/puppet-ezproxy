@@ -15,11 +15,18 @@ class ezproxy::config {
     group   => $::ezproxy::ezproxy_group,
     content => template('ezproxy/config.txt.erb')
   }
+  concat { 'ezproxy groups':
+    ensure => present,
+    path   => "${::ezproxy::install_path}/groups.txt",
+    owner  => $::ezproxy::ezproxy_user,
+    group  => $::ezproxy::ezproxy_group,
+  }
   ezproxy::group { 'Default':
     auto_login_ips => $::ezproxy::auto_login_ips,
     include_ips    => $::ezproxy::include_ips,
     exclude_ips    => $::ezproxy::exclude_ips,
     reject_ips     => $::ezproxy::reject_ips,
+    group_order    => '999999',
   }
   if $::ezproxy::default_stanzas {
     ezproxy::stanza { 'Worldcat.org':

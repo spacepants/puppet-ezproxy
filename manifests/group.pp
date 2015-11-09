@@ -24,6 +24,7 @@ define ezproxy::group (
   $include_ips    = [],
   $exclude_ips    = [],
   $reject_ips     = [],
+  $group_order    = '0',
   ) {
 
   if $auto_login_ips {
@@ -51,5 +52,11 @@ define ezproxy::group (
     target  => "ezproxy group ${name}",
     content => template('ezproxy/group.erb'),
     order   => '0',
+  }
+
+  concat::fragment { "${name} load order":
+    target  => 'ezproxy groups',
+    content => "IncludeFile group_${name}.txt\n",
+    order   => $group_order,
   }
 }

@@ -133,15 +133,8 @@ ProxySSL <%= @https_proxy %>
 # **************************** Database Definitions *****************************************
 ##  See http://www.oclc.org/support/documentation/ezproxy/db/default.htm
 
-<% if @groups -%>
-# Load any scoped groups
-<% @groups.each do |this_group| -%>
-IncludeFile <%= this_group %>.txt
-<% end -%>
-
-# Load our default group
-IncludeFile group_Default.txt
-<% end -%>
+# Load any scoped groups, including our default.
+IncludeFile groups.txt
 
 <% if @include_files -%>
 # Load any supplementary directive files
