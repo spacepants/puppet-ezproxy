@@ -30,7 +30,7 @@ describe 'ezproxy::stanza', :type => :define do
 
     it { is_expected.to contain_concat__fragment('sample').with({
       'target'  => 'ezproxy sites',
-      'content' => /T sample\nOption DoAThing\nOption DoAnotherThing\nU http:\/\/www\.test1\.url\nU http:\/\/www\.test2\.url\nH www.test1.url\nH www.test2.url\nD test1.url\nD test2.url\nDJ test3.url\nDJ test4.url\nHJ js.test3.url\nHJ js.test4.url\nOption StopDoingAThing\nOption StopDoingAnotherThing/,
+      'content' => /Option DoAThing\nOption DoAnotherThing\nT sample\nU http:\/\/www\.test1\.url\nU http:\/\/www\.test2\.url\nH www.test1.url\nH www.test2.url\nD test1.url\nD test2.url\nDJ test3.url\nDJ test4.url\nHJ js.test3.url\nHJ js.test4.url\nOption StopDoingAThing\nOption StopDoingAnotherThing/,
       'order'   => '2',
     }) }
   end
