@@ -86,6 +86,9 @@
 # [*default_stanzas*]
 #   Boolean for whether or not to include the default databases from OCLC.
 #
+# [*include_files*]
+#   Array of files to include in config.txt
+#
 # [*remote_configs*]
 #   Hash of remote config stanzas to include.
 #   More info in manifests/remote_config.pp.
@@ -106,14 +109,14 @@
 # [*service_enable*]
 #   Boolean for whether or not to start ezproxy on restart.
 #
+# [*login_cookie_name*]
+# String for alternate cookie name for EZproxy session cookie
+#
 # [*http_proxy*]
 # String for forward proxy configuration for http proxy_hostname:port
 #
 # [*https_proxy*]
 # String for forward proxy configuration for https proxy_hostname:port
-#
-# [*login_cookie_name*]
-# String for alternate cookie name for EZproxy session cookie
 #
 # [*log_user*]
 #   Boolean for whether or not logging of username should be done. This disables
@@ -150,16 +153,32 @@ class ezproxy (
   $ldap                     = $::ezproxy::params::ldap,
   $ldap_options             = $::ezproxy::params::ldap_options,
   $ldap_url                 = $::ezproxy::params::ldap_url,
+  $cgi                      = $::ezproxy::params::cgi,
+  $cgi_url                  = $::ezproxy::params::cgi_url,
+  $ticket_auth              = $::ezproxy::params::ticket_auth,
+  $ticket_acceptgroups      = $::ezproxy::params::ticket_acceptgroups,
+  $ticket_validtime         = $::ezproxy::params::ticket_validtime,
+  $ticket_timeoffset        = $::ezproxy::params::ticket_timeoffset,
+  $ticket_crypt_algorithm   = $::ezproxy::params::ticket_crypt_algorithm,
+  $ticket_secretkey         = $::ezproxy::params::ticket_secretkey,
+  $expiredticket_url        = $::ezproxy::params::expiredticket_url,
   $default_stanzas          = $::ezproxy::params::default_stanzas,
+  $include_files            = $::ezproxy::params::include_files,
   $remote_configs           = $::ezproxy::params::remote_configs,
   $stanzas                  = $::ezproxy::params::stanzas,
   $manage_service           = $::ezproxy::params::manage_service,
   $service_name             = $::ezproxy::params::service_name,
   $service_status           = $::ezproxy::params::service_status,
   $service_enable           = $::ezproxy::params::service_enable,
+<<<<<<< HEAD
   $http_proxy               = $::ezproxy::params::http_proxy,
   $https_proxy              = $::ezproxy::params::https_proxy,
   $login_cookie_name        = $::ezproxy::params::login_cookie_name,
+=======
+  $login_cookie_name        = $::ezproxy::params::login_cookie_name,
+  $http_proxy               = $::ezproxy::params::http_proxy,
+  $https_proxy              = $::ezproxy::params::https_proxy,
+>>>>>>> d06407a3b8ebd2dbf42dd3b0783b9ae29f835716
   $log_user                 = $::ezproxy::params::log_user,
 ) inherits ::ezproxy::params {
 
@@ -223,16 +242,66 @@ class ezproxy (
       fail('LDAP authentication requires a valid LDAP URL string.')
     }
   }
+  validate_bool($cgi)
+  if $cgi {
+    if $cgi_url {
+      validate_string($cgi_url)
+    } else {
+      fail('CGI authentication requires a valid CGI URL string.')
+    }
+  }
+  validate_bool($ticket_auth)
+  if $ticket_auth {
+    if $ticket_acceptgroups {
+      validate_string($ticket_acceptgroups)
+    }
+    if $ticket_validtime {
+      if !is_integer($ticket_validtime) {
+        fail('The ticket TimeValid setting must be numeric.')
+      }
+    }
+    if $ticket_timeoffset {
+      if !is_integer($ticket_timeoffset) {
+        fail('The ticket TimeOffset setting must be numeric.')
+      }
+    }
+    if $ticket_crypt_algorithm {
+      validate_string($ticket_crypt_algorithm)
+      #$_ticket_crypt_algorithm = upcase($ticket_crypt_algorithm)
+      if !(upcase($ticket_crypt_algorithm) in ['MD5', 'SHA1', 'SHA256', 'SHA512']) {
+        fail('The supported cryptography algorithms for ticket authentication are MD5, SHA1, SHA256, and SHA512.')
+      }
+    } else {
+      fail('You much provide a ticket authentication cryptography algorithm.')
+    }
+    if $ticket_secretkey {
+      validate_string($ticket_secretkey)
+    } else {
+      fail('You much provide the secret key for ticket authentication.')
+    }
+    if $expiredticket_url {
+      validate_string($expiredticket_url)
+    } else {
+      fail('You must provide a valid URL string for the ticket expiration warning.')
+    }
+  }
   validate_bool($default_stanzas)
+  validate_array($include_files)
   validate_hash($stanzas)
   validate_hash($remote_configs)
   validate_bool($manage_service)
   validate_string($service_name)
   validate_re($service_status, [ '^running', '^stopped' ])
   validate_bool($service_enable)
+<<<<<<< HEAD
   validate_string($http_proxy)
   validate_string($https_proxy)
   validate_string($login_cookie_name)
+=======
+  validate_string($login_cookie_name)
+  validate_string($http_proxy)
+  validate_string($https_proxy)
+>>>>>>> d06407a3b8ebd2dbf42dd3b0783b9ae29f835716
   validate_bool($log_user)
 
   class { '::ezproxy::install': } ->
