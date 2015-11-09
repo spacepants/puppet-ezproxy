@@ -63,6 +63,11 @@ I <%= this_include_ip %>
 E <%= this_exclude_ip %>
 <% end -%>
 <% end -%>
+<% if @reject_ips -%>
+<% @reject_ips.each do |this_reject_ip| -%>
+R <%= this_reject_ip %>
+<% end -%>
+<% end -%>
 
 ##  By default, EZproxy listens on port 2048. You can specify a different port here
 # LoginPort 80
@@ -140,12 +145,12 @@ LogFormat <%= @log_format %>
 ## https://www.oclc.org/support/services/ezproxy/documentation/cfg/proxy.en.html
 
 <% if @http_proxy -%>
-# Proxy host: port username: password 
+# Proxy host: port username: password
 Proxy <%= @http_proxy %>
 <% end -%>
 
 <% if @https_proxy -%>
-# ProxySSL host: port username: password 
+# ProxySSL host: port username: password
 ProxySSL <%= @https_proxy %>
 <% end -%>
 

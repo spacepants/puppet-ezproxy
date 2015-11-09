@@ -127,6 +127,7 @@ describe 'ezproxy' do
         'auto_login_ips'    => [ '1.0.0.0-1.255.255.255', '2.0.0.0-2.255.255.255' ],
         'include_ips'       => [ '3.0.0.0-3.255.255.255', '4.0.0.0-4.255.255.255' ],
         'exclude_ips'       => [ '5.0.0.0-5.255.255.255', '6.0.0.0-6.255.255.255' ],
+        'reject_ips'        => [ '7.0.0.0-7.255.255.255', '8.0.0.0-8.255.255.255' ],
         'login_port'        => '8080',
         'ssl'               => true,
         'https_login'       => true,
@@ -158,6 +159,7 @@ describe 'ezproxy' do
       it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/A 1.0.0.0-1.255.255.255\nA 2.0.0.0-2.255.255.255/) }
       it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/I 3.0.0.0-3.255.255.255\nI 4.0.0.0-4.255.255.255/) }
       it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/E 5.0.0.0-5.255.255.255\nE 6.0.0.0-6.255.255.255/) }
+      it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/R 7.0.0.0-7.255.255.255\nR 8.0.0.0-8.255.255.255/) }
       it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/LoginPort 8080/) }
       it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/LoginPortSSL 443\nOption ForceHTTPSLogin\nOption ForceHTTPSAdmin/) }
       it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/MaxLifetime 360/) }

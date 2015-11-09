@@ -35,6 +35,9 @@
 # [*exclude_ips*]
 #   Array of IPs to exclude.
 #
+# [*reject_ips*]
+#   Array of IPs to reject.
+#
 # [*login_port*]
 #   Port to listen for HTTP.
 #
@@ -122,7 +125,7 @@
 #   Boolean for whether or not logging of username should be done. This disables
 #   logging of session, if you require both then %{ezproxy-session} can be included
 #   in the log_format parameter
-# 
+#
 class ezproxy (
   $ezproxy_group            = $::ezproxy::params::ezproxy_group,
   $ezproxy_user             = $::ezproxy::params::ezproxy_user,
@@ -135,6 +138,7 @@ class ezproxy (
   $auto_login_ips           = $::ezproxy::params::auto_login_ips,
   $include_ips              = $::ezproxy::params::include_ips,
   $exclude_ips              = $::ezproxy::params::exclude_ips,
+  $reject_ips               = $::ezproxy::params::reject_ips,
   $login_port               = $::ezproxy::params::login_port,
   $ssl                      = $::ezproxy::params::ssl,
   $https_login              = $::ezproxy::params::https_login,
@@ -193,6 +197,9 @@ class ezproxy (
   }
   if $exclude_ips {
     validate_array($exclude_ips)
+  }
+  if $reject_ips {
+    validate_array($reject_ips)
   }
   validate_string($login_port)
   validate_bool($ssl)

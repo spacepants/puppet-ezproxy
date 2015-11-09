@@ -14,6 +14,7 @@ class ezproxy::params {
   $auto_login_ips           = []
   $include_ips              = []
   $exclude_ips              = []
+  $reject_ips               = []
   $login_port               = '80'
   $ssl                      = false
   $https_login              = false
