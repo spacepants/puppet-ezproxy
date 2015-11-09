@@ -118,6 +118,11 @@
 # [*https_proxy*]
 # String for forward proxy configuration for https proxy_hostname:port
 #
+# [*log_user*]
+#   Boolean for whether or not logging of username should be done. This disables
+#   logging of session, if you require both then %{ezproxy-session} can be included
+#   in the log_format parameter
+# 
 class ezproxy (
   $ezproxy_group            = $::ezproxy::params::ezproxy_group,
   $ezproxy_user             = $::ezproxy::params::ezproxy_user,
@@ -168,6 +173,7 @@ class ezproxy (
   $login_cookie_name        = $::ezproxy::params::login_cookie_name,
   $http_proxy               = $::ezproxy::params::http_proxy,
   $https_proxy              = $::ezproxy::params::https_proxy,
+  $log_user                 = $::ezproxy::params::log_user,
 ) inherits ::ezproxy::params {
 
   validate_string($ezproxy_group)
@@ -284,6 +290,7 @@ class ezproxy (
   validate_string($login_cookie_name)
   validate_string($http_proxy)
   validate_string($https_proxy)
+  validate_bool($log_user)
 
   class { '::ezproxy::install': } ->
   class { '::ezproxy::config': } ~>
