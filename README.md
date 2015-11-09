@@ -36,7 +36,8 @@ By default, this module will manage:
 * any applicable dependency packages (i.e. `ialibs-32` or `glibc.i686` for 64-bit systems, `dos2unix` for config file sanitization)
 * `$INSTALL_PATH/config.txt` which handles all of the EZProxy configuration
 * `$INSTALL_PATH/user.txt`
-* `$INSTALL_PATH/sites.txt` which is built out of file fragments for each individual EZProxy entry
+* `$INSTALL_PATH/groups.txt` which sets the group include file load order
+* `$INSTALL_PATH/group_Default.txt` which is built out of file fragments for each individual EZProxy entry
 * the `/etc/init.d/ezproxy` script for service management
 
 ## Usage
@@ -76,6 +77,26 @@ ezproxy::stanza { 'FirstSearch':
   urls    => [ 'http://firstsearch.oclc.org/FSIP' ],
   hosts   => [ 'firstsearch.oclc.org' ],
   domains => [ 'oclc.org' ],
+}
+```
+
+### Groups
+If you want to set up groups, they're also available as defined types:
+
+```puppet
+ezproxy::group { 'Whatever':
+  group_order => 1,
+}
+```
+
+You can also specify which group any stanza should use like this:
+
+```puppet
+ezproxy::stanza { 'FirstSearch':
+  urls    => [ 'http://firstsearch.oclc.org/FSIP' ],
+  hosts   => [ 'firstsearch.oclc.org' ],
+  domains => [ 'oclc.org' ],
+  group   => 'Whatever',
 }
 ```
 
@@ -203,6 +224,9 @@ ezproxy::proxy_by_hostname: true
 ezproxy::login_port: '80'
 ezproxy::max_sessions: '1000'
 ezproxy::max_vhosts: '2500'
+ezproxy::groups:
+  Whatever:
+    group_order: 1
 ezproxy::local_users:
   - user1:supersecure:admin
 ezproxy::remote_configs:
@@ -217,6 +241,7 @@ ezproxy::stanzas:
       - firstsearch.oclc.org
     domains:
       - oclc.org
+    group: 'Whatever'
 ```
 
 ## Limitations
