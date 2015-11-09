@@ -45,30 +45,6 @@ Option ProxyByHostname
 FirstPort <%= @first_port %>
 <% end -%>
 
-## Exclude/Include directives:
-## More info: http://pluto.potsdam.edu/ezproxywiki/index.php/Config.txt
-
-<% if @auto_login_ips -%>
-<% @auto_login_ips.each do |this_auto_ip| -%>
-A <%= this_auto_ip %>
-<% end -%>
-<% end -%>
-<% if @include_ips -%>
-<% @include_ips.each do |this_include_ip| -%>
-I <%= this_include_ip %>
-<% end -%>
-<% end -%>
-<% if @exclude_ips -%>
-<% @exclude_ips.each do |this_exclude_ip| -%>
-E <%= this_exclude_ip %>
-<% end -%>
-<% end -%>
-<% if @reject_ips -%>
-<% @reject_ips.each do |this_reject_ip| -%>
-R <%= this_reject_ip %>
-<% end -%>
-<% end -%>
-
 ##  By default, EZproxy listens on port 2048. You can specify a different port here
 # LoginPort 80
 <% if @login_port -%>
@@ -157,8 +133,18 @@ ProxySSL <%= @https_proxy %>
 # **************************** Database Definitions *****************************************
 ##  See http://www.oclc.org/support/documentation/ezproxy/db/default.htm
 
-IncludeFile sites.txt
+<% if @groups -%>
+# Load any scoped groups
+<% @groups.each do |this_group| -%>
+IncludeFile <%= this_group %>.txt
+<% end -%>
+
+# Load our default group
+IncludeFile group_Default.txt
+<% end -%>
+
 <% if @include_files -%>
+# Load any supplementary directive files
 <% @include_files.each do |this_include_file| -%>
 IncludeFile <%= this_include_file %>
 <% end -%>

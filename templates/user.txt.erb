@@ -24,6 +24,11 @@
 #
 #      rdoe:keepsafe:admin
 #
+<% if @user_groups -%>
+<% @user_groups.each do |this_group| -%>
+::group=+<%= this_group %>
+<% end -%>
+<% end -%>
 <% if @local_users -%>
 <% @local_users.each do |this_local_user| -%>
 <%= this_local_user %>

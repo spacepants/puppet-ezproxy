@@ -18,7 +18,7 @@ describe 'ezproxy::remote_config', :type => :define do
       'command' => 'dos2unix /sample_config',
     }) }
     it { is_expected.to contain_concat__fragment('sample').with({
-      'target' => 'ezproxy sites',
+      'target' => 'ezproxy group Default',
       'source' => '/sample_config',
       'order'  => '1',
     }) }
@@ -36,7 +36,7 @@ describe 'ezproxy::remote_config', :type => :define do
       'creates' => '/sample_config',
     }) }
     it { is_expected.to contain_concat__fragment('sample').with({
-      'target' => 'ezproxy sites',
+      'target' => 'ezproxy group Default',
       'source' => '/sample_config',
       'order'  => '2',
     }) }

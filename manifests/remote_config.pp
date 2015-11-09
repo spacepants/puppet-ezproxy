@@ -15,10 +15,14 @@
 # [*order*]
 #   Include order for the stanza.
 #
+# [*group*]
+#   Group for the stanza.
+#
 define ezproxy::remote_config (
   $download_link = undef,
   $file_name     = undef,
   $order         = '1',
+  $group         = 'Default',
   ) {
   validate_string($download_link)
   validate_string($file_name)
@@ -42,7 +46,7 @@ define ezproxy::remote_config (
   }
 
   concat::fragment { $name:
-    target  => 'ezproxy sites',
+    target  => "ezproxy group ${group}",
     source  => "${::ezproxy::install_path}/${file_name}",
     order   => $order,
     require => Exec["sanitize ${name} config"]

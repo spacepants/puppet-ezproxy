@@ -27,6 +27,7 @@ class ezproxy::params {
   $log_file                 = '-strftime ezp%Y%m.log'
   $local_users              = []
   $admins                   = []
+  $user_groups              = []
   $cas                      = false
   $cas_login_url            = undef
   $cas_service_validate_url = undef
@@ -45,6 +46,7 @@ class ezproxy::params {
   $default_stanzas          = true
   $include_files            = []
   $stanzas                  = {}
+  $groups                   = {}
   $remote_configs           = {}
   $manage_service           = true
   $service_status           = running
