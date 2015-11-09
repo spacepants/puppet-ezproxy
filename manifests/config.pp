@@ -15,30 +15,34 @@ class ezproxy::config {
     group   => $::ezproxy::ezproxy_group,
     content => template('ezproxy/config.txt.erb')
   }
-  concat { 'ezproxy sites':
-    ensure => present,
-    path   => "${::ezproxy::install_path}/sites.txt",
-    owner  => $::ezproxy::ezproxy_user,
-    group  => $::ezproxy::ezproxy_group,
+  ezproxy::group { 'Default':
+    auto_login_ips => $::ezproxy::auto_login_ips,
+    include_ips    => $::ezproxy::include_ips,
+    exclude_ips    => $::ezproxy::exclude_ips,
+    reject_ips     => $::ezproxy::reject_ips,
   }
   if $::ezproxy::default_stanzas {
     ezproxy::stanza { 'Worldcat.org':
       urls      => [ 'http://worldcat.org' ],
       domain_js => [ 'worldcat.org' ],
-      order     => '0',
+      order     => '1',
+      group     => 'Default',
     }
     ezproxy::stanza { 'WhatIsMyIP':
       urls      => [ 'http://whatismyip.com' ],
       domain_js => [ 'whatismyip.com' ],
-      order     => '0',
+      order     => '1',
+      group     => 'Default',
     }
     ezproxy::stanza { 'DOI System':
       urls    => [ 'http://dx.doi.org' ],
       domains => [ 'doi.org' ],
-      order   => '0',
+      order   => '1',
+      group   => 'Default',
       hide    => true,
     }
   }
+  create_resources(ezproxy::group, $::ezproxy::groups, {})
   create_resources(ezproxy::stanza, $::ezproxy::stanzas, {})
   create_resources(ezproxy::remote_config, $::ezproxy::remote_configs, {})
 }

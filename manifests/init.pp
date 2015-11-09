@@ -27,16 +27,16 @@
 #   First port to use when proxying by port.
 #
 # [*auto_login_ips*]
-#   Array of IPs to autologin.
+#   Array of IPs to autologin for the default group.
 #
 # [*include_ips*]
-#   Array of IPs to include.
+#   Array of IPs to include for the default group.
 #
 # [*exclude_ips*]
-#   Array of IPs to exclude.
+#   Array of IPs to exclude for the default group.
 #
 # [*reject_ips*]
-#   Array of IPs to reject.
+#   Array of IPs to reject for the default group.
 #
 # [*login_port*]
 #   Port to listen for HTTP.
@@ -100,6 +100,10 @@
 #   Hash of database stanzas to include.
 #   More info in manifests/stanza.pp.
 #
+# [*groups*]
+#   Hash of database groups to include.
+#   More info in manifests/group.pp.
+#
 # [*manage_service*]
 #   Boolean for whether or not to manage the service.
 #
@@ -151,6 +155,7 @@ class ezproxy (
   $log_file                 = $::ezproxy::params::log_file,
   $local_users              = $::ezproxy::params::local_users,
   $admins                   = $::ezproxy::params::admins,
+  $user_groups              = $::ezproxy::params::user_groups,
   $cas                      = $::ezproxy::params::cas,
   $cas_login_url            = $::ezproxy::params::cas_login_url,
   $cas_service_validate_url = $::ezproxy::params::cas_service_validate_url,
@@ -170,6 +175,7 @@ class ezproxy (
   $include_files            = $::ezproxy::params::include_files,
   $remote_configs           = $::ezproxy::params::remote_configs,
   $stanzas                  = $::ezproxy::params::stanzas,
+  $groups                   = $::ezproxy::params::groups,
   $manage_service           = $::ezproxy::params::manage_service,
   $service_name             = $::ezproxy::params::service_name,
   $service_status           = $::ezproxy::params::service_status,
@@ -218,6 +224,9 @@ class ezproxy (
   }
   if $admins {
     validate_array($admins)
+  }
+  if $user_groups {
+    validate_array($user_groups)
   }
   validate_bool($cas)
   if $cas {
@@ -290,6 +299,7 @@ class ezproxy (
   validate_array($include_files)
   validate_hash($stanzas)
   validate_hash($remote_configs)
+  validate_hash($groups)
   validate_bool($manage_service)
   validate_string($service_name)
   validate_re($service_status, [ '^running', '^stopped' ])

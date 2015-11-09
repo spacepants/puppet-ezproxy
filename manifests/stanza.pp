@@ -34,6 +34,9 @@
 # [*order*]
 #   Include order for the stanza.
 #
+# [*group*]
+#   Group for the stanza.
+#
 define ezproxy::stanza (
   $hide      = false,
   $hide_flag = '-hide',
@@ -44,7 +47,8 @@ define ezproxy::stanza (
   $host_js   = [],
   $prepends  = [],
   $appends   = [],
-  $order     = '1',
+  $order     = '2',
+  $group     = 'Default',
   ) {
 
   validate_bool($hide)
@@ -71,9 +75,10 @@ define ezproxy::stanza (
     validate_array($appends)
   }
   validate_string($order)
+  validate_string($group)
 
   concat::fragment { $name:
-    target  => 'ezproxy sites',
+    target  => "ezproxy group ${group}",
     content => template('ezproxy/stanza.erb'),
     order   => $order,
   }
