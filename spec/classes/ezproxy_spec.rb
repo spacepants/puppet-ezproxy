@@ -125,7 +125,7 @@ describe 'ezproxy' do
         'ezproxy_url'       => 'my.ezproxy.url',
         'download_url'      => 'http://my.ezproxy.download/link',
         'dependencies'      => [ 'package1', 'package2' ],
-        'first_port'        => 9001,
+        'first_port'        => '9001',
         'auto_login_ips'    => [ '1.0.0.0-1.255.255.255', '2.0.0.0-2.255.255.255' ],
         'include_ips'       => [ '3.0.0.0-3.255.255.255', '4.0.0.0-4.255.255.255' ],
         'exclude_ips'       => [ '5.0.0.0-5.255.255.255', '6.0.0.0-6.255.255.255' ],
