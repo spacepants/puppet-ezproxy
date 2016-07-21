@@ -166,7 +166,6 @@ describe 'ezproxy' do
       it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/LogFilter \*\.gif\*\nLogFilter \*\.jpg\*/) }
       it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/LogFile \/var\/log\/ezproxy\/ezproxy\.log/) }
       it { is_expected.to contain_file('/custom/install/path/config.txt').with_content(/LogFormat %t %h %l %u "%r" %s %b "%{Referer}i" "%{user-agent}i/) }
-      it { is_expected.to contain_file('ezproxy group Default') }
       it { is_expected.to contain_concat('ezproxy group Default').with_path('/custom/install/path/group_Default.txt') }
       it { is_expected.to contain_concat__fragment('Default header').with_content(/A 1.0.0.0-1.255.255.255\nA 2.0.0.0-2.255.255.255/) }
       it { is_expected.not_to contain_concat__fragment('Worldcat.org').with_ensure('present') }

@@ -41,22 +41,22 @@ define ezproxy::group (
   }
   validate_string($order)
 
-  concat { "ezproxy group ${name}":
+  concat { "ezproxy group ${title}":
     ensure => present,
-    path   => "${::ezproxy::install_path}/group_${name}.txt",
+    path   => "${::ezproxy::install_path}/group_${title}.txt",
     owner  => $::ezproxy::ezproxy_user,
     group  => $::ezproxy::ezproxy_group,
   }
 
-  concat::fragment { "${name} header":
-    target  => "ezproxy group ${name}",
+  concat::fragment { "${title} header":
+    target  => "ezproxy group ${title}",
     content => template('ezproxy/group.erb'),
     order   => '0',
   }
 
-  concat::fragment { "${name} load order":
+  concat::fragment { "${title} load order":
     target  => 'ezproxy groups',
-    content => "IncludeFile group_${name}.txt\n",
+    content => "IncludeFile group_${title}.txt\n",
     order   => $group_order,
   }
 }

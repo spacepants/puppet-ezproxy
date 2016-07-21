@@ -9,7 +9,6 @@ describe 'ezproxy::group', :type => :define do
       'ensure' => 'present',
       #'path'   => "${::ezproxy::install_path}/group_${name}.txt",
     }) }
-    it { is_expected.to contain_file('ezproxy group sample') }
     it { is_expected.to contain_concat__fragment('sample header').with({
       'target'  => 'ezproxy group sample',
       'content' => /Group sample/,
@@ -29,7 +28,6 @@ describe 'ezproxy::group', :type => :define do
     it { is_expected.to contain_concat('ezproxy group sample').with({
       'ensure' => 'present',
     }) }
-    it { is_expected.to contain_file('ezproxy group sample') }
     it { is_expected.to contain_concat__fragment('sample header').with({
       'target'  => 'ezproxy group sample',
       'content' => /A 1.0.0.0-1.255.255.255\nA 2.0.0.0-2.255.255.255/,

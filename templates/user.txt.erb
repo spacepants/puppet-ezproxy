@@ -24,62 +24,62 @@
 #
 #      rdoe:keepsafe:admin
 #
-<% if @user_groups -%>
-<% @user_groups.each do |this_group| -%>
+<% if scope['ezproxy::user_groups'] -%>
+<% scope['ezproxy::user_groups'].each do |this_group| -%>
 ::group=+<%= this_group %>
 <% end -%>
 <% end -%>
-<% if @local_users -%>
-<% @local_users.each do |this_local_user| -%>
+<% if scope['ezproxy::local_users'] -%>
+<% scope['ezproxy::local_users'].each do |this_local_user| -%>
 <%= this_local_user %>
 <% end -%>
 <% end -%>
-<% if @cas -%>
+<% if scope['ezproxy::cas'] -%>
 # CAS CONFIG
 ::CAS
-LoginURL <%= @cas_login_url %>
-ServiceValidateURL <%= @cas_service_validate_url %>
-<% if @admins -%>
-<% @admins.each do |this_admin| -%>
+LoginURL <%= scope['ezproxy::cas_login_url'] %>
+ServiceValidateURL <%= scope['ezproxy::cas_service_validate_url'] %>
+<% if scope['ezproxy::admins'] -%>
+<% scope['ezproxy::admins'].each do |this_admin| -%>
 IfUser <%= this_admin %>; Admin
 <% end -%>
 <% end -%>
 /CAS
 <% end -%>
-<% if @ldap -%>
+<% if scope['ezproxy::ldap'] -%>
 # LDAP CONFIG
 ::LDAP
-<% if @ldap_options -%>
-<% @ldap_options.each do |this_option| -%>
+<% if scope['ezproxy::ldap_options'] -%>
+<% scope['ezproxy::ldap_options'].each do |this_option| -%>
 <%= this_option %>
 <% end -%>
 <% end -%>
-URL <%= @ldap_url %>
+URL <%= scope['ezproxy::ldap_url'] %>
 IfUnauthenticated; Stop
-<% if @admins -%>
-<% @admins.each do |this_admin| -%>
+<% if scope['ezproxy::admins'] -%>
+<% scope['ezproxy::admins'].each do |this_admin| -%>
 IfUser <%= this_admin %>; Admin
 <% end -%>
 <% end -%>
 /LDAP
 <% end -%>
-<% if @cgi -%>
+<% if scope['ezproxy::cgi'] -%>
 # CGI CONFIG
-::CGI:<%= @cgi_url %>
+::CGI:<%= scope['ezproxy::cgi_url'] %>
 <% end -%>
-<% if @ticket_auth -%>
+<% if scope['ezproxy::ticket_auth'] -%>
 # TICKET CONFIG
 ::Ticket
-<% if @ticket_acceptgroups -%>
-AcceptGroups <%= @ticket_acceptgroups %>
+<% if scope['ezproxy::ticket_acceptgroups'] -%>
+AcceptGroups <%= scope['ezproxy::ticket_acceptgroups'] %>
 <% end -%>
-<% if @ticket_validtime -%>
-TimeValid <%= @ticket_validtime %>
+<% if scope['ezproxy::ticket_validtime'] -%>
+TimeValid <%= scope['ezproxy::ticket_validtime'] %>
 <% end -%>
-<% if @ticket_timeoffset -%>
-TimeOffset <%= @ticket_timeoffset %>
+<% if scope['ezproxy::ticket_timeoffset'] -%>
+TimeOffset <%= scope['ezproxy::ticket_timeoffset'] %>
 <% end -%>
-<%= @ticket_crypt_algorithm.upcase %> <%= @ticket_secretkey %>
-Expired; Deny <%= @expiredticket_url %>
+<%= scope['ezproxy::ticket_crypt_algorithm'].upcase %> <%= scope['ezproxy::ticket_secretkey'] %>
+Expired; Deny <%= scope['ezproxy::expiredticket_url'] %>
 /Ticket
 <% end -%>
