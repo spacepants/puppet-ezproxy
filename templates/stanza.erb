@@ -1,41 +1,41 @@
 
-<% if scope.lookupvar('prepends') -%>
-<% scope.lookupvar('prepends').each do |this_prepend| -%>
+<% if scope['prepends'] -%>
+<% scope['prepends'].each do |this_prepend| -%>
 <%= this_prepend %>
 <% end -%>
 <% end -%>
-<% if scope.lookupvar('hide') -%>
-T <%= scope.lookupvar('hide_flag') %> <%= scope.lookupvar('title') %>
+<% if scope['hide'] -%>
+T <%= scope['hide_flag'] %> <%= scope['title'] %>
 <% else -%>
-T <%= scope.lookupvar('title') %>
+T <%= scope['title'] %>
 <% end -%>
-<% if scope.lookupvar('urls') -%>
-<% scope.lookupvar('urls').each do |this_url| -%>
+<% if scope['urls'] -%>
+<% scope['urls'].each do |this_url| -%>
 U <%= this_url %>
 <% end -%>
 <% end -%>
-<% if scope.lookupvar('hosts') -%>
-<% scope.lookupvar('hosts').each do |this_host| -%>
+<% if scope['hosts'] -%>
+<% scope['hosts'].each do |this_host| -%>
 H <%= this_host %>
 <% end -%>
 <% end -%>
-<% if scope.lookupvar('domains') -%>
-<% scope.lookupvar('domains').each do |this_domain| -%>
+<% if scope['domains'] -%>
+<% scope['domains'].each do |this_domain| -%>
 D <%= this_domain %>
 <% end -%>
 <% end -%>
-<% if scope.lookupvar('domain_js') -%>
-<% scope.lookupvar('domain_js').each do |this_domain_js| -%>
+<% if scope['domain_js'] -%>
+<% scope['domain_js'].each do |this_domain_js| -%>
 DJ <%= this_domain_js %>
 <% end -%>
 <% end -%>
-<% if scope.lookupvar('host_js') -%>
-<% scope.lookupvar('host_js').each do |this_host_js| -%>
+<% if scope['host_js'] -%>
+<% scope['host_js'].each do |this_host_js| -%>
 HJ <%= this_host_js %>
 <% end -%>
 <% end -%>
-<% if scope.lookupvar('appends') -%>
-<% scope.lookupvar('appends').each do |this_append| -%>
+<% if scope['appends'] -%>
+<% scope['appends'].each do |this_append| -%>
 <%= this_append %>
 <% end -%>
 <% end -%>
