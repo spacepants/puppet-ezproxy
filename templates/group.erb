@@ -1,8 +1,4 @@
 Group <%= scope['title'] %>
-
-## Exclude/Include directives:
-## More info: http://pluto.potsdam.edu/ezproxywiki/index.php/Config.txt
-
 <% if scope['auto_login_ips'] -%>
 <% scope['auto_login_ips'].each do |this_auto_ip| -%>
 A <%= this_auto_ip %>

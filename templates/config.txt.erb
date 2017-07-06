@@ -1,60 +1,14 @@
 ### MANAGED BY PUPPET
-##
-##  For more information on this file, see:
-##          http://www.oclc.org/support/documentation/ezproxy/cfg/
-##                                   AND
-##          http://www.oclc.org/support/documentation/ezproxy/db/
-
-##  In this file, lines starting with # are comments.  The lines starting
-##  with ##  are meant solely as comments, whereas the lines starting with
-##  only # are followed by example entries.
-
-
-##  PLEASE NOTE: IF YOU CHANGE THIS FILE, you must restart EZproxy to make
-##  those changes take effect. == see http://www.oclc.org/support/documentation/ezproxy/restart.htm
-
-
-# ****************************EZproxy options *****************************************
-
-## RunAs directive
-## For more information on this directive, see:
-## http://www.oclc.org/support/documentation/ezproxy/cfg/runas/
 RunAs <%= scope['ezproxy::ezproxy_user'] %>:<%= scope['ezproxy::ezproxy_group'] %>
-
-## After running 'EZproxy -c' to test connectivity as instructed in the install guides
-## (http://www.oclc.org/us/en/support/documentation/ezproxy/download/),
-## If necessary, Name your EZproxy server
-## == http://www.oclc.org/support/documentation/ezproxy/cfg/name/
-
-# Name My.ezproxy.server
 Name <%= scope['ezproxy::ezproxy_url'] %>
-
-##  EZproxy must be set to Proxy-by-port or to Proxy-by-hostname:
-##  see http://www.oclc.org/support/documentation/ezproxy/portvshostname.htm
-##                             AND
-##  http://www.oclc.org/support/documentation/ezproxy/cfg/proxybyhostname.htm
-## If proxying by port, set the first port number to be used.
-## == http://www.oclc.org/support/documentation/ezproxy/cfg/firstport/
-
 <% if scope['ezproxy::proxy_by_hostname'] -%>
-# Option ProxyByHostname
 Option ProxyByHostname
-
 <% else -%>
-# FirstPort 5000
 FirstPort <%= scope['ezproxy::first_port'] %>
 <% end -%>
-
-##  By default, EZproxy listens on port 2048. You can specify a different port here
-# LoginPort 80
 <% if scope['ezproxy::login_port'] -%>
 LoginPort <%= scope['ezproxy::login_port'] %>
 <% end -%>
-
-##  SSL == see: http://www.oclc.org/support/documentation/ezproxy/cfg/ssl/
-##  If using Proxy by HostName you must use a wildcard SSL certificate
-##  Please review http://www.oclc.org/support/documentation/ezproxy/cfg/ssl/certopts.htm before implementing SSL
-# LoginPortSSL 443
 <% if scope['ezproxy::ssl'] -%>
 LoginPortSSL 443
 <% if scope['ezproxy::https_login'] -%>
@@ -64,50 +18,24 @@ Option ForceHTTPSLogin
 Option ForceHTTPSAdmin
 <% end -%>
 <% end -%>
-
-##  Connection limits. == see: http://www.oclc.org/support/documentation/ezproxy/cfg/limits.htm
-
-# MaxLifetime 120
 MaxLifetime <%= scope['ezproxy::max_lifetime'] %>
-# MaxSessions 500
 MaxSessions <%= scope['ezproxy::max_sessions'] %>
-# MaxVirtualHosts 1000
 MaxVirtualHosts <%= scope['ezproxy::max_vhosts'] %>
-
-##  When using Safari 2.0 and later with only three hostname components, Safari defaults to blocking the cookie. With EZproxy 3.6c GA
-## (2006-03-10) or later, you can add add the following to work around the restriction.
 Option SafariCookiePatch
-
 <% if scope['ezproxy::login_cookie_name'] -%>
-## LoginCookieName specifies an alternate name for the EZproxy session cookie.
-## The default name for the EZproxy session cookie is ezproxy.
-
-# LoginCookieName name
 LoginCookieName <%= scope['ezproxy::login_cookie_name'] %>
 <% end -%>
-
-##  Securing EZproxy == see: http://www.oclc.org/support/documentation/ezproxy/example/securing.htm
-
 Audit Most
 AuditPurge 7
 Option StatusUser
-
 <% if scope['ezproxy::log_user'] -%>
-## If LogUser is required then LogSession should not also be included
-## if session identifiers are also required then a custom log format
-## should be specified that includes %{ezproxy-session}
 Option LogUser
 <% else -%>
 Option LogSession
 <% end -%>
-
 IntruderIPAttempts -interval=5 -expires=15 20
 IntruderUserAttempts -interval=5 -expires=15 10
 UsageLimit -enforce -interval=15 -expires=120 -MB=200 Global
-
-##  Logging == see: http://www.oclc.org/support/documentation/ezproxy/cfg/logformat/
-##                                            AND
-##                  http://www.oclc.org/support/documentation/ezproxy/cfg/logfile/
 <% if scope['ezproxy::log_filters'] -%>
 <% scope['ezproxy::log_filters'].each do |this_log_filter| -%>
 LogFilter <%= this_log_filter %>
@@ -115,29 +43,14 @@ LogFilter <%= this_log_filter %>
 <% end -%>
 LogFile <%= scope['ezproxy::log_file'] %>
 LogFormat <%= scope['ezproxy::log_format'] %>
-
-## Enable forward proxying to allow EZproxy to access external resources
-## when behind a corporate firewall with no direct access allowed, see
-## https://www.oclc.org/support/services/ezproxy/documentation/cfg/proxy.en.html
-
 <% if scope['ezproxy::http_proxy'] -%>
-# Proxy host: port username: password
 Proxy <%= scope['ezproxy::http_proxy'] %>
 <% end -%>
-
 <% if scope['ezproxy::https_proxy'] -%>
-# ProxySSL host: port username: password
 ProxySSL <%= scope['ezproxy::https_proxy'] %>
 <% end -%>
-
-# **************************** Database Definitions *****************************************
-##  See http://www.oclc.org/support/documentation/ezproxy/db/default.htm
-
-# Load any scoped groups, including our default.
 IncludeFile groups.txt
-
 <% if scope['ezproxy::include_files'] -%>
-# Load any supplementary directive files
 <% scope['ezproxy::include_files'].each do |this_include_file| -%>
 IncludeFile <%= this_include_file %>
 <% end -%>
