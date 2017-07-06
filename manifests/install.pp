@@ -55,4 +55,17 @@ class ezproxy::install {
     refreshonly => true,
     returns     => '1',
   }
+
+  if versioncmp($version, '6.0.0') > 0 {
+    if $::ezproxy::ws_key {
+      exec { 'authorize ezproxy wskey':
+        command => "${::ezproxy::install_path}/ezproxy -k ${::ezproxy::ws_key}",
+        creates => "${::ezproxy::install_path}/wskey.key",
+        require => Exec['bootstrap ezproxy'],
+      }
+    }
+    else {
+      fail('EZProxy 6 requires a WS Key for authorization.')
+    }
+  }
 }

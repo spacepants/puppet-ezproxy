@@ -263,13 +263,13 @@ IncludeFile groups.txt
     end
   end
 
-  context 'ezproxy class with parameter overrides' do
+  context 'with parameter overrides' do
     let(:facts) {{
       osfamily:       'RedHat',
       architecture:   'x86_64',
     }}
 
-    context 'ezproxy class with custom parameters' do
+    context 'with custom parameters' do
       let(:params) {{
         'ezproxy_group'     => 'custom_group',
         'ezproxy_user'      => 'custom_user',
@@ -453,7 +453,7 @@ IncludeFile groups.txt
       }
     end
 
-    context 'ezproxy class with cas authentication' do
+    context 'with cas authentication' do
       let(:params) {{
         'cas'                      => true,
         'cas_login_url'            => 'https://my.cas.server/login',
@@ -497,7 +497,7 @@ IfUser ldapadmin2; Admin
       it { is_expected.to contain_file('/usr/local/ezproxy/user.txt').with_content(ldap_config) }
     end
 
-    context 'ezproxy class with with proxy_by_hostname enabled' do
+    context 'with proxy_by_hostname enabled' do
       let(:params) {{
         'proxy_by_hostname' => true
       }}
@@ -506,12 +506,39 @@ IfUser ldapadmin2; Admin
       it { is_expected.not_to contain_file('/usr/local/ezproxy/config.txt').with_content(/FirstPort/) }
     end
 
-    context 'ezproxy class with with service management disabled' do
+    context 'with service management disabled' do
       let(:params) {{
         'manage_service' => false
       }}
 
       it { is_expected.not_to contain_service('ezproxy') }
+    end
+
+    context 'when installing version 6' do
+      let(:params) {{
+        'version' => '6.2.2',
+        'ws_key' => 'abc123',
+      }}
+
+      it { is_expected.to contain_exec('download ezproxy').with(
+        command: 'curl -o /usr/local/ezproxy/ezproxy https://www.oclc.org/content/dam/support/ezproxy/documentation/download/binaries/6-2-2/ezproxy-linux.bin',
+        creates: '/usr/local/ezproxy/ezproxy',
+        path: '/sbin:/bin:/usr/sbin:/usr/bin',
+        ).that_requires('File[/usr/local/ezproxy]')
+      }
+      it { is_expected.to contain_exec('authorize ezproxy wskey').with(
+        command: '/usr/local/ezproxy/ezproxy -k abc123',
+        creates: '/usr/local/ezproxy/wskey.key',
+        ).that_requires('Exec[bootstrap ezproxy]')
+      }
+    end
+
+    context 'when installing version 6 and no ws key' do
+      let(:params) {{
+        'version' => '6.2.2',
+      }}
+
+      it { expect { is_expected.to contain_class('ezproxy') }.to raise_error(Puppet::Error, /EZProxy 6 requires a WS Key for authorization/) }
     end
   end
 
