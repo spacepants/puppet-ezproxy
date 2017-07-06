@@ -4,6 +4,9 @@
 #
 class ezproxy::install {
 
+  $version = $::ezproxy::version
+  $download_version = regsubst($version, '\.', '-', 'G')
+
   group { $::ezproxy::ezproxy_group:
     ensure => present,
     system => true,
@@ -25,7 +28,7 @@ class ezproxy::install {
   }
 
   exec { 'download ezproxy':
-    command => "curl -o ${::ezproxy::install_path}/ezproxy ${::ezproxy::download_url}",
+    command => "curl -o ${::ezproxy::install_path}/ezproxy ${::ezproxy::download_url}/${download_version}/ezproxy-linux.bin",
     creates => "${::ezproxy::install_path}/ezproxy",
     path    => '/sbin:/bin:/usr/sbin:/usr/bin',
     require => File[$::ezproxy::install_path]

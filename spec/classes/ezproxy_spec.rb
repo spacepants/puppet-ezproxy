@@ -347,7 +347,7 @@ IncludeFile groups.txt
       it { is_expected.to contain_package('package1').with_ensure('installed').that_notifies('Exec[bootstrap ezproxy]') }
       it { is_expected.to contain_package('package2').with_ensure('installed').that_notifies('Exec[bootstrap ezproxy]') }
       it { is_expected.to contain_exec('download ezproxy').with(
-        command: 'curl -o /custom/install/path/ezproxy http://my.ezproxy.download/link',
+        command: 'curl -o /custom/install/path/ezproxy http://my.ezproxy.download/link/5-7-44/ezproxy-linux.bin',
         creates: '/custom/install/path/ezproxy',
         path: '/sbin:/bin:/usr/sbin:/usr/bin',
         ).that_requires('File[/custom/install/path]')
