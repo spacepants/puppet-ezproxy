@@ -53,7 +53,8 @@ class ezproxy::config {
     owner  => $::ezproxy::ezproxy_user,
     group  => $::ezproxy::ezproxy_group,
   }
-  ezproxy::group { 'Default':
+
+  ezproxy::group { 'default':
     auto_login_ips => $::ezproxy::auto_login_ips,
     include_ips    => $::ezproxy::include_ips,
     exclude_ips    => $::ezproxy::exclude_ips,
@@ -66,19 +67,19 @@ class ezproxy::config {
       urls      => [ 'http://worldcat.org' ],
       domain_js => [ 'worldcat.org' ],
       order     => '1',
-      group     => 'Default',
+      group     => 'default',
     }
     ezproxy::stanza { 'WhatIsMyIP':
       urls      => [ 'http://whatismyip.com' ],
       domain_js => [ 'whatismyip.com' ],
       order     => '1',
-      group     => 'Default',
+      group     => 'default',
     }
     ezproxy::stanza { 'DOI System':
       urls    => [ 'http://dx.doi.org' ],
       domains => [ 'doi.org' ],
       order   => '1',
-      group   => 'Default',
+      group   => 'default',
       hide    => true,
     }
   }
