@@ -1,0 +1,110 @@
+---
+require: rubocop-rspec
+AllCops:
+  TargetRubyVersion: '2.1'
+  Include:
+    - ./**/*.rb
+  Exclude:
+    - Gemfile
+    - Rakefile
+    - files/**/*
+    - vendor/**/*
+    - .vendor/**/*
+    - pkg/**/*
+    - spec/fixtures/**/*
+
+# Configuration parameters: AllowURI, URISchemes.
+Metrics/LineLength:
+  Max: 328
+
+# 'Complexity' is very relative
+Metrics/PerceivedComplexity:
+  Enabled: false
+
+# 'Complexity' is very relative
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
+# 'Complexity' is very relative
+Metrics/AbcSize:
+  Enabled: false
+
+# Method length is not necessarily an indicator of code quality
+Metrics/MethodLength:
+  Enabled: false
+
+# Module length is not necessarily an indicator of code quality
+Metrics/ModuleLength:
+  Enabled: false
+
+# Class length is not necessarily an indicator of code quality
+Metrics/ClassLength:
+  Enabled: false
+
+# Block length is not necessarily an indicator of code quality
+Metrics/BlockLength:
+  Enabled: false
+
+# dealbreaker:
+Style/TrailingCommaInArguments:
+  Enabled: false
+Style/TrailingCommaInLiteral:
+  Enabled: false
+Layout/ClosingParenthesisIndentation:
+  Enabled: false
+
+Lint/AmbiguousRegexpLiteral:
+  Enabled: true
+Style/FormatStringToken:
+  Enabled: false
+Style/RegexpLiteral:
+  Enabled: true
+Style/WordArray:
+  Enabled: false
+
+# this catches the cases of using `module` for parser functions, types, or
+# providers
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/Documentation:
+  Description: 'Document classes and non-namespace modules.'
+  Enabled: false
+
+# More comfortable block layouts
+Style/BlockDelimiters:
+  Enabled: false
+
+Layout/MultilineBlockLayout:
+  Enabled: false
+
+Layout/SpaceInsideBlockBraces:
+  Enabled: false
+
+# Rspec
+
+# We don't use rspec in this way
+RSpec/DescribeClass:
+  Enabled: false
+
+# Example length is not necessarily an indicator of code quality
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+# disabled for now since they cause a lot of issues
+# these issues aren't easy to fix
+RSpec/RepeatedDescription:
+  Enabled: false
+
+RSpec/RepeatedExample:
+  Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
+
+# disable Yaml safe_load. This is needed to support ruby2.0.0 development envs
+Security/YAMLLoad:
+  Enabled: false
