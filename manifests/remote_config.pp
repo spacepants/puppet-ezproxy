@@ -19,15 +19,11 @@
 #   Group for the stanza.
 #
 define ezproxy::remote_config (
-  $download_link = undef,
-  $file_name     = undef,
-  $order         = '1',
-  $group         = 'Default',
-  ) {
-  validate_string($download_link)
-  validate_string($file_name)
-  validate_absolute_path("${::ezproxy::install_path}/${file_name}")
-  validate_string($order)
+  String $download_link,
+  String $file_name,
+  String $order         = '1',
+  String $group         = 'default',
+) {
 
   $cmd = "curl -o ${::ezproxy::install_path}/${file_name} ${download_link}"
   exec { "download ${name} config":
@@ -42,7 +38,6 @@ define ezproxy::remote_config (
     command     => "dos2unix ${::ezproxy::install_path}/${file_name}",
     path        => '/sbin:/bin:/usr/sbin:/usr/bin',
     refreshonly => true,
-    require     => Exec["download ${name} config"]
   }
 
   concat::fragment { $name:

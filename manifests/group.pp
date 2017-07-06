@@ -20,26 +20,12 @@
 #   Array of IPs to reject for this group.
 #
 define ezproxy::group (
-  $auto_login_ips = [],
-  $include_ips    = [],
-  $exclude_ips    = [],
-  $reject_ips     = [],
-  $group_order    = '0',
-  ) {
-
-  if $auto_login_ips {
-    validate_array($auto_login_ips)
-  }
-  if $include_ips {
-    validate_array($include_ips)
-  }
-  if $exclude_ips {
-    validate_array($exclude_ips)
-  }
-  if $reject_ips {
-    validate_array($reject_ips)
-  }
-  validate_string($order)
+  Array  $auto_login_ips = [],
+  Array  $include_ips    = [],
+  Array  $exclude_ips    = [],
+  Array  $reject_ips     = [],
+  String $group_order    = '0',
+) {
 
   concat { "ezproxy group ${title}":
     ensure => present,

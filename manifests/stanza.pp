@@ -38,44 +38,18 @@
 #   Group for the stanza.
 #
 define ezproxy::stanza (
-  $hide      = false,
-  $hide_flag = '-hide',
-  $urls      = [],
-  $hosts     = [],
-  $domains   = [],
-  $domain_js = [],
-  $host_js   = [],
-  $prepends  = [],
-  $appends   = [],
-  $order     = '2',
-  $group     = 'Default',
-  ) {
-
-  validate_bool($hide)
-  validate_string($hide_flag)
-  if $urls {
-    validate_array($urls)
-  }
-  if $hosts {
-    validate_array($hosts)
-  }
-  if $domains {
-    validate_array($domains)
-  }
-  if $domain_js {
-    validate_array($domain_js)
-  }
-  if $host_js {
-    validate_array($host_js)
-  }
-  if $prepends {
-    validate_array($prepends)
-  }
-  if $appends {
-    validate_array($appends)
-  }
-  validate_string($order)
-  validate_string($group)
+  Boolean $hide      = false,
+  String  $hide_flag = '-hide',
+  Array   $urls      = [],
+  Array   $hosts     = [],
+  Array   $domains   = [],
+  Array   $domain_js = [],
+  Array   $host_js   = [],
+  Array   $prepends  = [],
+  Array   $appends   = [],
+  String  $order     = '2',
+  String  $group     = 'default',
+) {
 
   concat::fragment { $name:
     target  => "ezproxy group ${group}",

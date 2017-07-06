@@ -131,186 +131,63 @@
 #   in the log_format parameter
 #
 class ezproxy (
-  $ezproxy_group            = $::ezproxy::params::ezproxy_group,
-  $ezproxy_user             = $::ezproxy::params::ezproxy_user,
-  $install_path             = $::ezproxy::params::install_path,
-  $ezproxy_url              = $::ezproxy::params::ezproxy_url,
-  $download_url             = $::ezproxy::params::download_url,
-  $dependencies             = $::ezproxy::params::dependencies,
-  $proxy_by_hostname        = $::ezproxy::params::proxy_by_hostname,
-  $first_port               = $::ezproxy::params::first_port,
-  $auto_login_ips           = $::ezproxy::params::auto_login_ips,
-  $include_ips              = $::ezproxy::params::include_ips,
-  $exclude_ips              = $::ezproxy::params::exclude_ips,
-  $reject_ips               = $::ezproxy::params::reject_ips,
-  $login_port               = $::ezproxy::params::login_port,
-  $ssl                      = $::ezproxy::params::ssl,
-  $https_login              = $::ezproxy::params::https_login,
-  $https_admin              = $::ezproxy::params::https_admin,
-  $max_lifetime             = $::ezproxy::params::max_lifetime,
-  $max_sessions             = $::ezproxy::params::max_sessions,
-  $max_vhosts               = $::ezproxy::params::max_vhosts,
-  $log_filters              = $::ezproxy::params::log_filters,
-  $log_format               = $::ezproxy::params::log_format,
-  $log_file                 = $::ezproxy::params::log_file,
-  $local_users              = $::ezproxy::params::local_users,
-  $admins                   = $::ezproxy::params::admins,
-  $user_groups              = $::ezproxy::params::user_groups,
-  $cas                      = $::ezproxy::params::cas,
-  $cas_login_url            = $::ezproxy::params::cas_login_url,
-  $cas_service_validate_url = $::ezproxy::params::cas_service_validate_url,
-  $ldap                     = $::ezproxy::params::ldap,
-  $ldap_options             = $::ezproxy::params::ldap_options,
-  $ldap_url                 = $::ezproxy::params::ldap_url,
-  $cgi                      = $::ezproxy::params::cgi,
-  $cgi_url                  = $::ezproxy::params::cgi_url,
-  $ticket_auth              = $::ezproxy::params::ticket_auth,
-  $ticket_acceptgroups      = $::ezproxy::params::ticket_acceptgroups,
-  $ticket_validtime         = $::ezproxy::params::ticket_validtime,
-  $ticket_timeoffset        = $::ezproxy::params::ticket_timeoffset,
-  $ticket_crypt_algorithm   = $::ezproxy::params::ticket_crypt_algorithm,
-  $ticket_secretkey         = $::ezproxy::params::ticket_secretkey,
-  $expiredticket_url        = $::ezproxy::params::expiredticket_url,
-  $default_stanzas          = $::ezproxy::params::default_stanzas,
-  $include_files            = $::ezproxy::params::include_files,
-  $remote_configs           = $::ezproxy::params::remote_configs,
-  $stanzas                  = $::ezproxy::params::stanzas,
-  $groups                   = $::ezproxy::params::groups,
-  $manage_service           = $::ezproxy::params::manage_service,
-  $service_name             = $::ezproxy::params::service_name,
-  $service_status           = $::ezproxy::params::service_status,
-  $service_enable           = $::ezproxy::params::service_enable,
-  $login_cookie_name        = $::ezproxy::params::login_cookie_name,
-  $http_proxy               = $::ezproxy::params::http_proxy,
-  $https_proxy              = $::ezproxy::params::https_proxy,
-  $log_user                 = $::ezproxy::params::log_user,
+  String                                         $ezproxy_group            = 'ezproxy',
+  String                                         $ezproxy_user             = 'ezproxy',
+  Stdlib::Absolutepath                           $install_path             = '/usr/local/ezproxy',
+  String                                         $ezproxy_url              = $::fqdn,
+  String                                         $download_url             = 'https://www.oclc.org/content/dam/support/ezproxy/documentation/download/binaries/5-7-44/ezproxy-linux.bin',
+  Array[String]                                  $dependencies             = $::ezproxy::params::dependencies,
+  Boolean                                        $proxy_by_hostname        = false,
+  String                                         $first_port               = '5000',
+  Array                                          $auto_login_ips           = [],
+  Array                                          $include_ips              = [],
+  Array                                          $exclude_ips              = [],
+  Array                                          $reject_ips               = [],
+  String                                         $login_port               = '80',
+  Boolean                                        $ssl                      = false,
+  Boolean                                        $https_login              = false,
+  Boolean                                        $https_admin              = false,
+  String                                         $max_lifetime             = '120',
+  String                                         $max_sessions             = '500',
+  String                                         $max_vhosts               = '1000',
+  Array                                          $log_filters              = [],
+  String                                         $log_format               = '%h %l %u %t "%r" %s %b',
+  String                                         $log_file                 = '-strftime ezp%Y%m.log',
+  Array                                          $local_users              = [],
+  Array                                          $admins                   = [],
+  Array                                          $user_groups              = [],
+  Boolean                                        $cas                      = false,
+  Optional[String]                               $cas_login_url            = undef,
+  Optional[String]                               $cas_service_validate_url = undef,
+  Boolean                                        $ldap                     = false,
+  Array                                          $ldap_options             = [],
+  Optional[String]                               $ldap_url                 = undef,
+  Boolean                                        $cgi                      = false,
+  Optional[String]                               $cgi_url                  = undef,
+  Boolean                                        $ticket_auth              = false,
+  Optional[String]                               $ticket_acceptgroups      = undef,
+  Optional[Integer]                              $ticket_validtime         = undef,
+  Optional[Integer]                              $ticket_timeoffset        = undef,
+  Optional[Enum['MD5','SHA1','SHA256','SHA512']] $ticket_crypt_algorithm   = undef,
+  Optional[String]                               $ticket_secretkey         = undef,
+  String                                         $expiredticket_url        = 'expired.html',
+  Boolean                                        $default_stanzas          = true,
+  Array                                          $include_files            = [],
+  Hash                                           $remote_configs           = {},
+  Hash                                           $stanzas                  = {},
+  Hash                                           $groups                   = {},
+  Boolean                                        $manage_service           = true,
+  String                                         $service_name             = 'ezproxy',
+  String                                         $service_status           = 'running',
+  Boolean                                        $service_enable           = true,
+  Optional[String]                               $login_cookie_name        = undef,
+  Optional[String]                               $http_proxy               = undef,
+  Optional[String]                               $https_proxy              = undef,
+  Boolean                                        $log_user                 = false,
 ) inherits ::ezproxy::params {
 
-  validate_string($ezproxy_group)
-  validate_string($ezproxy_user)
-  validate_absolute_path($install_path)
-  if $ezproxy_url {
-    validate_string($ezproxy_url)
-  }
-  validate_string($download_url)
-  validate_bool($proxy_by_hostname)
-  validate_string($first_port)
-  if $auto_login_ips {
-    validate_array($auto_login_ips)
-  }
-  if $include_ips {
-    validate_array($include_ips)
-  }
-  if $exclude_ips {
-    validate_array($exclude_ips)
-  }
-  if $reject_ips {
-    validate_array($reject_ips)
-  }
-  validate_string($login_port)
-  validate_bool($ssl)
-  validate_bool($https_login)
-  validate_bool($https_admin)
-  validate_string($max_lifetime)
-  validate_string($max_sessions)
-  validate_string($max_vhosts)
-  if $log_filters {
-    validate_array($log_filters)
-  }
-  validate_string($log_format)
-  validate_string($log_file)
-  if $local_users {
-    validate_array($local_users)
-  }
-  if $admins {
-    validate_array($admins)
-  }
-  if $user_groups {
-    validate_array($user_groups)
-  }
-  validate_bool($cas)
-  if $cas {
-    if $cas_login_url {
-      validate_string($cas_login_url)
-    } else {
-      fail('CAS authentication requires a valid CAS login URL string.')
-    }
-    if $cas_service_validate_url {
-      validate_string($cas_service_validate_url)
-    } else {
-      fail('CAS authentication requires a valid service validate URL string.')
-    }
-  }
-  validate_bool($ldap)
-  if $ldap {
-    if $ldap_options {
-      validate_array($ldap_options)
-    }
-    if $ldap_url {
-      validate_string($ldap_url)
-    } else {
-      fail('LDAP authentication requires a valid LDAP URL string.')
-    }
-  }
-  validate_bool($cgi)
-  if $cgi {
-    if $cgi_url {
-      validate_string($cgi_url)
-    } else {
-      fail('CGI authentication requires a valid CGI URL string.')
-    }
-  }
-  validate_bool($ticket_auth)
-  if $ticket_auth {
-    if $ticket_acceptgroups {
-      validate_string($ticket_acceptgroups)
-    }
-    if $ticket_validtime {
-      if !is_integer($ticket_validtime) {
-        fail('The ticket TimeValid setting must be numeric.')
-      }
-    }
-    if $ticket_timeoffset {
-      if !is_integer($ticket_timeoffset) {
-        fail('The ticket TimeOffset setting must be numeric.')
-      }
-    }
-    if $ticket_crypt_algorithm {
-      validate_string($ticket_crypt_algorithm)
-      #$_ticket_crypt_algorithm = upcase($ticket_crypt_algorithm)
-      if !(upcase($ticket_crypt_algorithm) in ['MD5', 'SHA1', 'SHA256', 'SHA512']) {
-        fail('The supported cryptography algorithms for ticket authentication are MD5, SHA1, SHA256, and SHA512.')
-      }
-    } else {
-      fail('You much provide a ticket authentication cryptography algorithm.')
-    }
-    if $ticket_secretkey {
-      validate_string($ticket_secretkey)
-    } else {
-      fail('You much provide the secret key for ticket authentication.')
-    }
-    if $expiredticket_url {
-      validate_string($expiredticket_url)
-    } else {
-      fail('You must provide a valid URL string for the ticket expiration warning.')
-    }
-  }
-  validate_bool($default_stanzas)
-  validate_array($include_files)
-  validate_hash($stanzas)
-  validate_hash($remote_configs)
-  validate_hash($groups)
-  validate_bool($manage_service)
-  validate_string($service_name)
-  validate_re($service_status, [ '^running', '^stopped' ])
-  validate_bool($service_enable)
-  validate_string($login_cookie_name)
-  validate_string($http_proxy)
-  validate_string($https_proxy)
-  validate_bool($log_user)
-
-  class { '::ezproxy::install': } ->
-  class { '::ezproxy::config': } ~>
-  class { '::ezproxy::service': } ->
-  Class['::ezproxy']
+  class { '::ezproxy::install': }
+  -> class { '::ezproxy::config': }
+  ~> class { '::ezproxy::service': }
+  -> Class['::ezproxy']
 }
