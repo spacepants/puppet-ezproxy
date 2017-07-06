@@ -48,7 +48,7 @@ class ezproxy::install {
   }
 
   exec { 'bootstrap ezproxy':
-    command     => "${::ezproxy::install_path}/ezproxy -m",
+    command     => "${::ezproxy::install_path}/ezproxy -mg",
     refreshonly => true,
     returns     => '1',
   }
