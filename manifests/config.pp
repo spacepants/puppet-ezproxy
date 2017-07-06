@@ -40,6 +40,9 @@ class ezproxy::config {
   file { "${::ezproxy::install_path}/docs/logout.htm":
     ensure  => file,
   }
+  file { "${::ezproxy::install_path}/docs/logup.htm":
+    ensure  => file,
+  }
   file { "${::ezproxy::install_path}/docs/menu.htm":
     ensure  => file,
   }

@@ -163,6 +163,12 @@ IncludeFile groups.txt
         group: 'ezproxy',
         )
       }
+      it { is_expected.to contain_file('/usr/local/ezproxy/docs/logup.htm').with(
+        ensure: 'file',
+        owner: 'ezproxy',
+        group: 'ezproxy',
+        )
+      }
       it { is_expected.to contain_file('/usr/local/ezproxy/docs/menu.htm').with(
         ensure: 'file',
         owner: 'ezproxy',
@@ -410,6 +416,12 @@ IncludeFile groups.txt
         )
       }
       it { is_expected.to contain_file('/custom/install/path/docs/logout.htm').with(
+        ensure: 'file',
+        owner: 'custom_user',
+        group: 'custom_group',
+        )
+      }
+      it { is_expected.to contain_file('/custom/install/path/docs/logup.htm').with(
         ensure: 'file',
         owner: 'custom_user',
         group: 'custom_group',
