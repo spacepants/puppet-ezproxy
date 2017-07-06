@@ -1,44 +1,58 @@
 require 'spec_helper'
 
-describe 'ezproxy::remote_config', :type => :define do
-  let(:facts) {{ :concat_basedir => '/var/lib/puppet/concat' }}
+describe 'ezproxy::remote_config', type: :define do
+  let(:facts) {{
+    osfamily:       'RedHat',
+    architecture:   'x86_64',
+    concat_basedir: '/dne',
+  }}
   let(:title) { 'sample' }
+  let(:pre_condition) { 'include ezproxy' }
 
   context 'passing the required params' do
     let(:params) {{
-      'download_link' => 'http://www.test.url/path/to/config',
-      'file_name'     => 'sample_config',
+      download_link: 'http://www.test.url/path/to/config',
+      file_name: 'sample_config',
     }}
 
-    it { is_expected.to contain_exec('download sample config').with({
-      'command' => 'curl -o /sample_config http://www.test.url/path/to/config',
-      'creates' => '/sample_config',
-    }) }
-    it { is_expected.to contain_exec('sanitize sample config').with({
-      'command' => 'dos2unix /sample_config',
-    }) }
-    it { is_expected.to contain_concat__fragment('sample').with({
-      'target' => 'ezproxy group Default',
-      'source' => '/sample_config',
-      'order'  => '1',
-    }) }
+    it { is_expected.to contain_exec('download sample config').with(
+      command: 'curl -o /usr/local/ezproxy/sample_config http://www.test.url/path/to/config',
+      creates: '/usr/local/ezproxy/sample_config',
+      path: '/sbin:/bin:/usr/sbin:/usr/bin',
+      ).that_notifies('Exec[sanitize sample config]').that_requires('File[/usr/local/ezproxy]')
+    }
+    it { is_expected.to contain_exec('sanitize sample config').with(
+      command: 'dos2unix /usr/local/ezproxy/sample_config',
+      path: '/sbin:/bin:/usr/sbin:/usr/bin',
+      refreshonly: true,
+      )
+    }
+    it { is_expected.to contain_concat__fragment('sample').with(
+      target: 'ezproxy group default',
+      source: '/usr/local/ezproxy/sample_config',
+      order: '1',
+      ).that_requires('Exec[sanitize sample config]')
+    }
   end
 
   context 'passing all params' do
     let(:params) {{
-      'download_link' => 'http://www.test.url/path/to/config',
-      'file_name'     => 'sample_config',
-      'order'         => '2',
+      download_link: 'http://www.test.url/path/to/config',
+      file_name: 'sample_config',
+      order: '2',
     }}
 
-    it { is_expected.to contain_exec('download sample config').with({
-      'command' => 'curl -o /sample_config http://www.test.url/path/to/config',
-      'creates' => '/sample_config',
-    }) }
-    it { is_expected.to contain_concat__fragment('sample').with({
-      'target' => 'ezproxy group Default',
-      'source' => '/sample_config',
-      'order'  => '2',
-    }) }
+    it { is_expected.to contain_exec('download sample config').with(
+      command: 'curl -o /usr/local/ezproxy/sample_config http://www.test.url/path/to/config',
+      creates: '/usr/local/ezproxy/sample_config',
+      path: '/sbin:/bin:/usr/sbin:/usr/bin',
+      ).that_notifies('Exec[sanitize sample config]').that_requires('File[/usr/local/ezproxy]')
+    }
+    it { is_expected.to contain_concat__fragment('sample').with(
+      target: 'ezproxy group default',
+      source: '/usr/local/ezproxy/sample_config',
+      order: '2',
+      ).that_requires('Exec[sanitize sample config]')
+    }
   end
 end
