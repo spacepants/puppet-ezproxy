@@ -17,7 +17,7 @@ class ezproxy::service {
       enable     => $::ezproxy::service_enable,
       hasstatus  => true,
       hasrestart => true,
-      require    => File['/etc/init.d/ezproxy']
+      require    => File["/etc/init.d/${::ezproxy::service_name}"]
     }
 
   }
