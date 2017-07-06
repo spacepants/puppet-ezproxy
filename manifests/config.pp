@@ -3,18 +3,50 @@
 # This class is called from ezproxy for service config.
 #
 class ezproxy::config {
+  # Set resource defaults
+  File {
+    owner   => $::ezproxy::ezproxy_user,
+    group   => $::ezproxy::ezproxy_group,
+  }
+
   file { "${::ezproxy::install_path}/user.txt":
     ensure  => file,
-    owner   => $::ezproxy::ezproxy_user,
-    group   => $::ezproxy::ezproxy_group,
     content => template('ezproxy/user.txt.erb')
   }
+
   file { "${::ezproxy::install_path}/config.txt":
     ensure  => file,
-    owner   => $::ezproxy::ezproxy_user,
-    group   => $::ezproxy::ezproxy_group,
     content => template('ezproxy/config.txt.erb')
   }
+
+  file { "${::ezproxy::install_path}/license.txt":
+    ensure  => file,
+  }
+  file { "${::ezproxy::install_path}/mimetype":
+    ensure  => file,
+  }
+  file { "${::ezproxy::install_path}/docs":
+    ensure  => directory,
+  }
+  file { "${::ezproxy::install_path}/docs/cookie.htm":
+    ensure  => file,
+  }
+  file { "${::ezproxy::install_path}/docs/login.htm":
+    ensure  => file,
+  }
+  file { "${::ezproxy::install_path}/docs/loginbu.htm":
+    ensure  => file,
+  }
+  file { "${::ezproxy::install_path}/docs/logout.htm":
+    ensure  => file,
+  }
+  file { "${::ezproxy::install_path}/docs/menu.htm":
+    ensure  => file,
+  }
+  file { "${::ezproxy::install_path}/docs/https.htm":
+    ensure  => file,
+  }
+
   concat { 'ezproxy groups':
     ensure => present,
     path   => "${::ezproxy::install_path}/groups.txt",
@@ -28,6 +60,7 @@ class ezproxy::config {
     reject_ips     => $::ezproxy::reject_ips,
     group_order    => '999999',
   }
+
   if $::ezproxy::default_stanzas {
     ezproxy::stanza { 'Worldcat.org':
       urls      => [ 'http://worldcat.org' ],
@@ -49,6 +82,7 @@ class ezproxy::config {
       hide    => true,
     }
   }
+
   create_resources(ezproxy::group, $::ezproxy::groups, {})
   create_resources(ezproxy::stanza, $::ezproxy::stanzas, {})
   create_resources(ezproxy::remote_config, $::ezproxy::remote_configs, {})
