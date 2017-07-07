@@ -7,6 +7,7 @@ class ezproxy::params {
 
   case $::osfamily {
     'Debian': {
+      $ezproxy_shell = '/usr/sbin/nologin'
       case $::operatingsystemmajrelease {
         '8', '16.04': {
           $service_type = 'systemd'
@@ -24,6 +25,7 @@ class ezproxy::params {
       }
     }
     'RedHat': {
+      $ezproxy_shell = '/sbin/nologin'
       if $::architecture == 'x86_64' {
         $os_deps = 'glibc.i686'
       }
