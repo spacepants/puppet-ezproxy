@@ -19,7 +19,13 @@ class ezproxy::config {
     content => template('ezproxy/config.txt.erb')
   }
 
+  file { "${::ezproxy::install_path}/ezproxy.rnd":
+    ensure  => file,
+  }
   file { "${::ezproxy::install_path}/license.txt":
+    ensure  => file,
+  }
+  file { "${::ezproxy::install_path}/messages.txt":
     ensure  => file,
   }
   file { "${::ezproxy::install_path}/mimetype":

@@ -100,6 +100,7 @@ Alias=ezproxy.service
         ensure: 'directory',
         owner: 'ezproxy',
         group: 'ezproxy',
+        recurse: true,
         ).that_requires('User[ezproxy]')
       }
 
@@ -150,7 +151,19 @@ Alias=ezproxy.service
         content: config_default,
         )
       }
+      it { is_expected.to contain_file('/usr/local/ezproxy/ezproxy.rnd').with(
+        ensure: 'file',
+        owner: 'ezproxy',
+        group: 'ezproxy',
+        )
+      }
       it { is_expected.to contain_file('/usr/local/ezproxy/license.txt').with(
+        ensure: 'file',
+        owner: 'ezproxy',
+        group: 'ezproxy',
+        )
+      }
+      it { is_expected.to contain_file('/usr/local/ezproxy/messages.txt').with(
         ensure: 'file',
         owner: 'ezproxy',
         group: 'ezproxy',
@@ -384,6 +397,7 @@ IncludeFile groups.txt
         ensure: 'directory',
         owner: 'custom_user',
         group: 'custom_group',
+        recurse: true,
         ).that_requires('User[custom_user]')
       }
       it { is_expected.to contain_package('package1').with_ensure('installed').that_notifies('Exec[bootstrap ezproxy]') }
@@ -415,7 +429,19 @@ IncludeFile groups.txt
         content: custom_config,
         )
       }
+      it { is_expected.to contain_file('/custom/install/path/ezproxy.rnd').with(
+        ensure: 'file',
+        owner: 'custom_user',
+        group: 'custom_group',
+        )
+      }
       it { is_expected.to contain_file('/custom/install/path/license.txt').with(
+        ensure: 'file',
+        owner: 'custom_user',
+        group: 'custom_group',
+        )
+      }
+      it { is_expected.to contain_file('/custom/install/path/messages.txt').with(
         ensure: 'file',
         owner: 'custom_user',
         group: 'custom_group',

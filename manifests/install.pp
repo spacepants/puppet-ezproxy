@@ -24,6 +24,7 @@ class ezproxy::install {
     ensure  => directory,
     owner   => $::ezproxy::ezproxy_user,
     group   => $::ezproxy::ezproxy_group,
+    recurse => true,
     require => User[$::ezproxy::ezproxy_user]
   }
 
