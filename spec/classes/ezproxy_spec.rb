@@ -28,6 +28,41 @@ LogFormat %h %l %u %t "%r" %s %b
 IncludeFile groups.txt
 '
       }
+      let(:init_default) { '#!/bin/sh
+#
+# chkconfig: 345 99 00
+# description: Starts and stop the EZproxy daemon
+#
+
+if [ -z "$1" ]
+then
+  echo "Usage: $0 {start|stop|restart|bounce|status}"
+  exit 1
+fi
+
+su - ezproxy -c "/usr/local/ezproxy/ezproxy $*"
+'
+      }
+      let(:systemd_default) { '# MANAGED BY PUPPET
+[Unit]
+Description=EZProxy service
+Documentation=https://www.oclc.org/support/services/ezproxy.en.html
+After=network.target
+
+[Service]
+User=ezproxy
+Group=ezproxy
+ExecStart=/usr/local/ezproxy/ezproxy start
+ExecReload=/usr/local/ezproxy/ezproxy restart
+WorkingDirectory=/usr/local/ezproxy
+KillMode=control-group
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+Alias=ezproxy.service
+'
+      }
 
       it { is_expected.to compile.with_all_deps }
       it { is_expected.to contain_class('ezproxy') }
@@ -213,18 +248,31 @@ IncludeFile groups.txt
         )
       }
 
-      it { is_expected.to contain_file('/etc/init.d/ezproxy').with(
-        ensure: 'file',
-        mode: '0755',
-        content: %r{/usr/local/ezproxy/ezproxy \$\*\n},
-        )
-      }
+      case os_facts[:osfamily]
+      when 'Debian'
+        case os_facts[:operatingsystemmajrelease]
+        when '8', '16.04'
+          it { is_expected.to contain_file('/lib/systemd/system/ezproxy.service').with(
+            ensure: 'file',
+            mode: '0644',
+            content: systemd_default,
+            ).that_comes_before('Service[ezproxy]')
+          }
+        else
+          it { is_expected.to contain_file('/etc/init.d/ezproxy').with(
+            ensure: 'file',
+            mode: '0755',
+            content: init_default,
+            ).that_comes_before('Service[ezproxy]')
+          }
+        end
+      end
       it { is_expected.to contain_service('ezproxy').with(
         ensure: 'running',
         enable: true,
         hasstatus: true,
         hasrestart: true,
-        ).that_requires('File[/etc/init.d/ezproxy]')
+        )
       }
     end
   end
@@ -233,22 +281,22 @@ IncludeFile groups.txt
     test_on = {
       supported_os: [
         {
-          'operatingsystem'        => 'Debian',
-          'operatingsystemrelease' => ['6', '7', '8'],
+          'operatingsystem'           => 'Debian',
+          'operatingsystemmajrelease' => ['6', '7', '8'],
         },
         {
-          'operatingsystem'        => 'Ubuntu',
-          'operatingsystemrelease' => ['12.04', '14.04', '16.04'],
+          'operatingsystem'           => 'Ubuntu',
+          'operatingsystemmajrelease' => ['12.04', '14.04', '16.04'],
         },
       ],
     }
     on_supported_os(test_on).each do |_os, os_facts|
-      context "with default parameters on #{os_facts[:operatingsystem]}-#{os_facts[:operatingsystemrelease]}-amd64" do
+      context "with default parameters on #{os_facts[:operatingsystem]}-#{os_facts[:operatingsystemmajrelease]}-amd64" do
         let(:facts) do
           os_facts.merge(architecture: 'amd64')
         end
 
-        if os_facts[:operatingsystem] == 'Ubuntu' && os_facts[:operatingsystemrelease] == '12.04'
+        if os_facts[:operatingsystem] == 'Ubuntu' && os_facts[:operatingsystemmajrelease] == '12.04'
           it { is_expected.to contain_package('lib32z1').with(
             ensure: 'installed',
             ).that_notifies('Exec[bootstrap ezproxy]')
@@ -265,8 +313,9 @@ IncludeFile groups.txt
 
   context 'with parameter overrides' do
     let(:facts) {{
-      osfamily:       'RedHat',
-      architecture:   'x86_64',
+      osfamily:                  'RedHat',
+      architecture:              'x86_64',
+      operatingsystemmajrelease: '6',
     }}
 
     context 'with custom parameters' do
@@ -441,7 +490,7 @@ IncludeFile groups.txt
       it { is_expected.to contain_file('/etc/init.d/custom-service').with(
         ensure: 'file',
         mode: '0755',
-        content: %r{/custom/install/path/ezproxy \$\*\n},
+        content: %r{su - custom_user -c "/custom/install/path/ezproxy \$\*"\n},
         )
       }
       it { is_expected.to contain_service('custom-service').with(

@@ -1,0 +1,18 @@
+# MANAGED BY PUPPET
+[Unit]
+Description=EZProxy service
+Documentation=https://www.oclc.org/support/services/ezproxy.en.html
+After=network.target
+
+[Service]
+User=<%= @user %>
+Group=<%= @group %>
+ExecStart=<%= @install_path %>/ezproxy start
+ExecReload=<%= @install_path %>/ezproxy restart
+WorkingDirectory=<%= @install_path %>
+KillMode=control-group
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+Alias=ezproxy.service

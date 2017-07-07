@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe 'ezproxy::stanza', type: :define do
   let(:facts) {{
-    osfamily:       'RedHat',
-    architecture:   'x86_64',
-    concat_basedir: '/dne',
+    osfamily:                  'RedHat',
+    architecture:              'x86_64',
+    operatingsystemmajrelease: '6',
   }}
   let(:title) { 'sample' }
   let(:pre_condition) { 'include ezproxy' }

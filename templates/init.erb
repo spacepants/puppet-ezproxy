@@ -1,0 +1,13 @@
+#!/bin/sh
+#
+# chkconfig: 345 99 00
+# description: Starts and stop the EZproxy daemon
+#
+
+if [ -z "$1" ]
+then
+  echo "Usage: $0 {start|stop|restart|bounce|status}"
+  exit 1
+fi
+
+su - <%= @user %> -c "<%= @install_path %>/ezproxy $*"

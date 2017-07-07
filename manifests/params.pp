@@ -8,8 +8,17 @@ class ezproxy::params {
   case $::osfamily {
     'Debian': {
       $ezproxy_shell = '/usr/sbin/nologin'
+      case $::operatingsystemmajrelease {
+        '8', '16.04': {
+          $service_type = 'systemd'
+        }
+        default: {
+          $service_type = 'init'
+        }
+      }
+
       if $::architecture == 'amd64' {
-        if ($::operatingsystem == 'Ubuntu' and $::operatingsystemrelease == '12.04') {
+        if ($::operatingsystem == 'Ubuntu' and $::operatingsystemmajrelease == '12.04') {
           $os_deps = 'lib32z1'
         }
         else {
@@ -27,6 +36,14 @@ class ezproxy::params {
       }
       else {
         $os_deps = undef
+      }
+      case $::operatingsystemmajrelease {
+        '7': {
+          $service_type = 'systemd'
+        }
+        default: {
+          $service_type = 'init'
+        }
       }
     }
     default: {
