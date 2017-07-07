@@ -93,7 +93,38 @@ class ezproxy::config {
     }
   }
 
-  create_resources(ezproxy::group, $::ezproxy::groups, {})
-  create_resources(ezproxy::stanza, $::ezproxy::stanzas, {})
-  create_resources(ezproxy::remote_config, $::ezproxy::remote_configs, {})
+  $::ezproxy::groups.each |$group, $params| {
+    ::ezproxy::group { $group:
+      auto_login_ips => $params['auto_login_ips'],
+      include_ips    => $params['include_ips'],
+      exclude_ips    => $params['exclude_ips'],
+      reject_ips     => $params['reject_ips'],
+      group_order    => $params['group_order'],
+    }
+  }
+
+  $::ezproxy::stanzas.each |$stanza, $params| {
+    ::ezproxy::stanza { $stanza:
+      hide      => $params['hide'],
+      hide_flag => $params['hide_flag'],
+      urls      => $params['urls'],
+      hosts     => $params['hosts'],
+      domains   => $params['domains'],
+      domain_js => $params['domain_js'],
+      host_js   => $params['host_js'],
+      prepends  => $params['prepends'],
+      appends   => $params['appends'],
+      order     => $params['order'],
+      group     => $params['group'],
+    }
+  }
+
+  $::ezproxy::remote_configs.each |$remote_config, $params| {
+    ::ezproxy::remote_config { $remote_config:
+      download_link => $params['download_link'],
+      file_name     => $params['file_name'],
+      order         => $params['order'],
+      group         => $params['group'],
+    }
+  }
 }
