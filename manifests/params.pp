@@ -17,12 +17,7 @@ class ezproxy::params {
       }
 
       if $::architecture == 'amd64' {
-        if ($::operatingsystem == 'Ubuntu' and $::operatingsystemmajrelease == '12.04') {
-          $os_deps = 'lib32z1'
-        }
-        else {
-          $os_deps = 'ia32-libs'
-        }
+        $os_deps = 'lib32z1'
       }
       else {
         $os_deps = undef

@@ -283,17 +283,10 @@ Alias=ezproxy.service
           os_facts.merge(architecture: 'amd64')
         end
 
-        if os_facts[:operatingsystem] == 'Ubuntu' && os_facts[:operatingsystemmajrelease] == '12.04'
-          it { is_expected.to contain_package('lib32z1').with(
-            ensure: 'installed',
-            ).that_notifies('Exec[bootstrap ezproxy]')
-          }
-        else
-          it { is_expected.to contain_package('ia32-libs').with(
-            ensure: 'installed',
-            ).that_notifies('Exec[bootstrap ezproxy]')
-          }
-        end
+        it { is_expected.to contain_package('lib32z1').with(
+          ensure: 'installed',
+          ).that_notifies('Exec[bootstrap ezproxy]')
+        }
       end
     end
   end
