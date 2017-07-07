@@ -40,7 +40,7 @@ then
   exit 1
 fi
 
-su - ezproxy -c "/usr/local/ezproxy/ezproxy $*"
+/usr/local/ezproxy/ezproxy $*
 '
       }
       let(:systemd_default) { '# MANAGED BY PUPPET
@@ -50,9 +50,7 @@ Documentation=https://www.oclc.org/support/services/ezproxy.en.html
 After=network.target
 
 [Service]
-User=ezproxy
-Group=ezproxy
-ExecStart=/usr/local/ezproxy/ezproxy start
+ExecStart=/usr/local/ezproxy/ezproxy
 ExecReload=/usr/local/ezproxy/ezproxy restart
 WorkingDirectory=/usr/local/ezproxy
 KillMode=control-group
@@ -265,6 +263,23 @@ Alias=ezproxy.service
       when 'Debian'
         case os_facts[:operatingsystemmajrelease]
         when '8', '16.04'
+          it { is_expected.to contain_file('/lib/systemd/system/ezproxy.service').with(
+            ensure: 'file',
+            mode: '0644',
+            content: systemd_default,
+            ).that_comes_before('Service[ezproxy]')
+          }
+        else
+          it { is_expected.to contain_file('/etc/init.d/ezproxy').with(
+            ensure: 'file',
+            mode: '0755',
+            content: init_default,
+            ).that_comes_before('Service[ezproxy]')
+          }
+        end
+      when 'RedHat'
+        case os_facts[:operatingsystemmajrelease]
+        when '7'
           it { is_expected.to contain_file('/lib/systemd/system/ezproxy.service').with(
             ensure: 'file',
             mode: '0644',
@@ -509,7 +524,7 @@ IncludeFile groups.txt
       it { is_expected.to contain_file('/etc/init.d/custom-service').with(
         ensure: 'file',
         mode: '0755',
-        content: %r{su - custom_user -c "/custom/install/path/ezproxy \$\*"\n},
+        content: %r{/custom/install/path/ezproxy \$\*\n},
         )
       }
       it { is_expected.to contain_service('custom-service').with(
