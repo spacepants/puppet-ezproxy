@@ -19,15 +19,24 @@
 #   Group for the stanza.
 #
 define ezproxy::remote_config (
-  String $download_link,
-  String $file_name,
-  String $order         = '1',
-  String $group         = 'default',
+  String           $download_link,
+  String           $file_name,
+  String           $order         = '1',
+  String           $group         = 'default',
+  Optional[String] $maxdays       = undef,
 ) {
 
-  $cmd = "curl -o ${::ezproxy::install_path}/${file_name} ${download_link}"
+  if $maxdays {
+    exec { "refreshing ${name} config: older than ${maxdays} days":
+      command => "rm ${::ezproxy::install_path}/${file_name}",
+      path    => '/sbin:/bin:/usr/sbin:/usr/bin',
+      onlyif  => "find ${::ezproxy::install_path}/${file_name} -mtime +${maxdays} | grep ${file_name}",
+      before  => Exec["download ${name} config"],
+    }
+  }
+
   exec { "download ${name} config":
-    command => $cmd,
+    command => "curl -o ${::ezproxy::install_path}/${file_name} ${download_link}",
     creates => "${::ezproxy::install_path}/${file_name}",
     path    => '/sbin:/bin:/usr/sbin:/usr/bin',
     notify  => Exec["sanitize ${name} config"],

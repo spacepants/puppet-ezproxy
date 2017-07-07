@@ -33,6 +33,7 @@ describe 'ezproxy::remote_config', type: :define do
       order: '1',
       ).that_requires('Exec[sanitize sample config]')
     }
+    it { is_expected.not_to contain_exec('refreshing sample config: older than  days') }
   end
 
   context 'passing all params' do
@@ -40,8 +41,15 @@ describe 'ezproxy::remote_config', type: :define do
       download_link: 'http://www.test.url/path/to/config',
       file_name: 'sample_config',
       order: '2',
+      maxdays: '30',
     }}
 
+    it { is_expected.to contain_exec('refreshing sample config: older than 30 days').with(
+      command: 'rm /usr/local/ezproxy/sample_config',
+      path: '/sbin:/bin:/usr/sbin:/usr/bin',
+      onlyif: 'find /usr/local/ezproxy/sample_config -mtime +30 | grep sample_config',
+      ).that_comes_before('Exec[download sample config]')
+    }
     it { is_expected.to contain_exec('download sample config').with(
       command: 'curl -o /usr/local/ezproxy/sample_config http://www.test.url/path/to/config',
       creates: '/usr/local/ezproxy/sample_config',
