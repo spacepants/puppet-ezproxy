@@ -135,7 +135,7 @@ class ezproxy (
   String                                         $ezproxy_user             = 'ezproxy',
   Stdlib::Absolutepath                           $install_path             = '/usr/local/ezproxy',
   String                                         $version                  = '5.7.44',
-  Optional[String]                               $ws_key                   = undef,
+  Optional[String]                               $key                      = undef,
   String                                         $ezproxy_url              = $::fqdn,
   String                                         $download_url             = 'https://www.oclc.org/content/dam/support/ezproxy/documentation/download/binaries',
   Array[String]                                  $dependencies             = $::ezproxy::params::dependencies,

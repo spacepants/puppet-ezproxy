@@ -7,7 +7,7 @@ describe 'ezproxy::remote_config', type: :define do
     operatingsystemmajrelease: '6',
   }}
   let(:title) { 'sample' }
-  let(:pre_condition) { 'include ezproxy' }
+  let(:pre_condition) { " class { 'ezproxy': key => 'abc123' } " }
 
   context 'passing the required params' do
     let(:params) {{

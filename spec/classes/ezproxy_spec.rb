@@ -5,8 +5,11 @@ describe 'ezproxy' do
     hardwaremodels: ['i386', 'x86_64']
   }
   on_supported_os(test_on).each do |os, os_facts|
-    context "with default parameters on #{os}" do
+    context "with required parameters on #{os}" do
       let(:facts) { os_facts }
+      let(:params) {{
+        key: 'abc123',
+      }}
       let(:config_default) { '### MANAGED BY PUPPET
 RunAs ezproxy:ezproxy
 Name foo.example.com
@@ -133,6 +136,18 @@ Alias=ezproxy.service
         refreshonly: true,
         returns: '1',
         )
+      }
+      it { is_expected.to contain_file('/usr/local/ezproxy/ezproxy.key').with(
+        ensure: 'file',
+        owner: 'ezproxy',
+        group: 'ezproxy',
+        ).that_requires('Exec[bootstrap ezproxy]')
+      }
+      it { is_expected.to contain_file_line('ezproxy key').with(
+        ensure: 'present',
+        path: '/usr/local/ezproxy/ezproxy.key',
+        line: 'abc123',
+        ).that_requires('File[/usr/local/ezproxy/ezproxy.key]')
       }
 
       it { is_expected.to contain_file('/usr/local/ezproxy/user.txt').with(
@@ -319,10 +334,13 @@ Alias=ezproxy.service
       ],
     }
     on_supported_os(test_on).each do |_os, os_facts|
-      context "with default parameters on #{os_facts[:operatingsystem]}-#{os_facts[:operatingsystemmajrelease]}-amd64" do
+      context "with required parameters on #{os_facts[:operatingsystem]}-#{os_facts[:operatingsystemmajrelease]}-amd64" do
         let(:facts) do
           os_facts.merge(architecture: 'amd64')
         end
+        let(:params) {{
+          key: 'abc123',
+        }}
 
         it { is_expected.to contain_package('lib32z1').with(
           ensure: 'installed',
@@ -334,39 +352,41 @@ Alias=ezproxy.service
 
   context 'with parameter overrides' do
     let(:facts) {{
-      osfamily:                  'RedHat',
-      architecture:              'x86_64',
+      key: 'abc123',
+      osfamily: 'RedHat',
+      architecture: 'x86_64',
       operatingsystemmajrelease: '6',
     }}
 
     context 'with custom parameters' do
       let(:params) {{
-        'ezproxy_group'     => 'custom_group',
-        'ezproxy_user'      => 'custom_user',
-        'install_path'      => '/custom/install/path',
-        'ezproxy_url'       => 'my.ezproxy.url',
-        'download_url'      => 'http://my.ezproxy.download/link',
-        'dependencies'      => ['package1', 'package2'],
-        'first_port'        => '9001',
-        'auto_login_ips'    => ['1.0.0.0-1.255.255.255', '2.0.0.0-2.255.255.255'],
-        'include_ips'       => ['3.0.0.0-3.255.255.255', '4.0.0.0-4.255.255.255'],
-        'exclude_ips'       => ['5.0.0.0-5.255.255.255', '6.0.0.0-6.255.255.255'],
-        'reject_ips'        => ['7.0.0.0-7.255.255.255', '8.0.0.0-8.255.255.255'],
-        'login_port'        => '8080',
-        'ssl'               => true,
-        'https_login'       => true,
-        'https_admin'       => true,
-        'max_lifetime'      => '360',
-        'max_sessions'      => '1000',
-        'max_vhosts'        => '5000',
-        'log_filters'       => ['*.gif*', '*.jpg*'],
-        'log_format'        => '%t %h %l %u "%r" %s %b "%{Referer}i" "%{user-agent}i"',
-        'log_file'          => '/var/log/ezproxy/ezproxy.log',
-        'local_users'       => ['user1:supersecure:admin', 'user2:coolpass:admin'],
-        'default_stanzas'   => false,
-        'service_name'      => 'custom-service',
-        'service_status'    => 'stopped',
-        'service_enable'    => false,
+        key: 'abc123',
+        ezproxy_group: 'custom_group',
+        ezproxy_user: 'custom_user',
+        install_path: '/custom/install/path',
+        ezproxy_url: 'my.ezproxy.url',
+        download_url: 'http://my.ezproxy.download/link',
+        dependencies: ['package1', 'package2'],
+        first_port: '9001',
+        auto_login_ips: ['1.0.0.0-1.255.255.255', '2.0.0.0-2.255.255.255'],
+        include_ips: ['3.0.0.0-3.255.255.255', '4.0.0.0-4.255.255.255'],
+        exclude_ips: ['5.0.0.0-5.255.255.255', '6.0.0.0-6.255.255.255'],
+        reject_ips: ['7.0.0.0-7.255.255.255', '8.0.0.0-8.255.255.255'],
+        login_port: '8080',
+        ssl: true,
+        https_login: true,
+        https_admin: true,
+        max_lifetime: '360',
+        max_sessions: '1000',
+        max_vhosts: '5000',
+        log_filters: ['*.gif*', '*.jpg*'],
+        log_format: '%t %h %l %u "%r" %s %b "%{Referer}i" "%{user-agent}i"',
+        log_file: '/var/log/ezproxy/ezproxy.log',
+        local_users: ['user1:supersecure:admin', 'user2:coolpass:admin'],
+        default_stanzas: false,
+        service_name: 'custom-service',
+        service_status: 'stopped',
+        service_enable: false,
       }}
       let(:custom_config) { '### MANAGED BY PUPPET
 RunAs custom_user:custom_group
@@ -429,6 +449,24 @@ IncludeFile groups.txt
         owner: 'custom_user',
         group: 'custom_group',
         ).that_requires('Exec[download ezproxy]').that_notifies('Exec[bootstrap ezproxy]')
+      }
+      it { is_expected.to contain_exec('bootstrap ezproxy').with(
+        command: '/custom/install/path/ezproxy -mg',
+        refreshonly: true,
+        returns: '1',
+        )
+      }
+      it { is_expected.to contain_file('/custom/install/path/ezproxy.key').with(
+        ensure: 'file',
+        owner: 'custom_user',
+        group: 'custom_group',
+        ).that_requires('Exec[bootstrap ezproxy]')
+      }
+      it { is_expected.to contain_file_line('ezproxy key').with(
+        ensure: 'present',
+        path: '/custom/install/path/ezproxy.key',
+        line: 'abc123',
+        ).that_requires('File[/custom/install/path/ezproxy.key]')
       }
       it { is_expected.to contain_file('/custom/install/path/user.txt').with(
         ensure: 'file',
@@ -538,10 +576,11 @@ IncludeFile groups.txt
 
     context 'with cas authentication' do
       let(:params) {{
-        'cas'                      => true,
-        'cas_login_url'            => 'https://my.cas.server/login',
-        'cas_service_validate_url' => 'https://my.cas.server/serviceValidate',
-        'admins'                   => ['casadmin1', 'casadmin2'],
+        key: 'abc123',
+        cas: true,
+        cas_login_url: 'https://my.cas.server/login',
+        cas_service_validate_url: 'https://my.cas.server/serviceValidate',
+        admins: ['casadmin1', 'casadmin2'],
       }}
       let(:cas_config) { '## MANAGED BY PUPPET
 # CAS CONFIG
@@ -559,10 +598,11 @@ IfUser casadmin2; Admin
 
     context 'ezproxy class with ldap authentication' do
       let(:params) {{
-        'ldap'         => true,
-        'ldap_options' => ['BindUser CN=ezproxy,DC=mydomain,DC=edu', 'BindPassword supersecret'],
-        'ldap_url'     => 'ldap://ldap.mydomain.edu/dc=mydomain,dc=edu?uid',
-        'admins'       => ['ldapadmin1', 'ldapadmin2'],
+        key: 'abc123',
+        ldap: true,
+        ldap_options: ['BindUser CN=ezproxy,DC=mydomain,DC=edu', 'BindPassword supersecret'],
+        ldap_url: 'ldap://ldap.mydomain.edu/dc=mydomain,dc=edu?uid',
+        admins: ['ldapadmin1', 'ldapadmin2'],
       }}
       let(:ldap_config) { '## MANAGED BY PUPPET
 # LDAP CONFIG
@@ -582,7 +622,8 @@ IfUser ldapadmin2; Admin
 
     context 'with proxy_by_hostname enabled' do
       let(:params) {{
-        'proxy_by_hostname' => true
+        key: 'abc123',
+        proxy_by_hostname: true,
       }}
 
       it { is_expected.to contain_file('/usr/local/ezproxy/config.txt').with_content(/Option ProxyByHostname/) }
@@ -591,7 +632,8 @@ IfUser ldapadmin2; Admin
 
     context 'with service management disabled' do
       let(:params) {{
-        'manage_service' => false
+        key: 'abc123',
+        manage_service: false,
       }}
 
       it { is_expected.not_to contain_service('ezproxy') }
@@ -599,8 +641,8 @@ IfUser ldapadmin2; Admin
 
     context 'when installing version 6' do
       let(:params) {{
-        'version' => '6.2.2',
-        'ws_key' => 'abc123',
+        key: 'abc123',
+        version: '6.2.2',
       }}
 
       it { is_expected.to contain_exec('download ezproxy').with(
@@ -614,14 +656,18 @@ IfUser ldapadmin2; Admin
         creates: '/usr/local/ezproxy/wskey.key',
         ).that_requires('Exec[bootstrap ezproxy]')
       }
+      it { is_expected.to contain_file('/usr/local/ezproxy/wskey.key').with(
+        ensure: 'file',
+        owner: 'ezproxy',
+        group: 'ezproxy',
+        ).that_requires('Exec[authorize ezproxy wskey]')
+      }
     end
 
-    context 'when installing version 6 and no ws key' do
-      let(:params) {{
-        'version' => '6.2.2',
-      }}
+    context 'when no key provided' do
+      let(:params) {{}}
 
-      it { expect { is_expected.to contain_class('ezproxy') }.to raise_error(Puppet::Error, /EZProxy 6 requires a WS Key for authorization/) }
+      it { expect { is_expected.to contain_class('ezproxy') }.to raise_error(Puppet::Error, /EZProxy requires a key or WS key for authorization/) }
     end
   end
 

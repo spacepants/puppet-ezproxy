@@ -57,16 +57,38 @@ class ezproxy::install {
     returns     => '1',
   }
 
-  if versioncmp($version, '6.0.0') > 0 {
-    if $::ezproxy::ws_key {
+  if $::ezproxy::key {
+    if versioncmp($version, '6.0.0') >= 0 {
       exec { 'authorize ezproxy wskey':
-        command => "${::ezproxy::install_path}/ezproxy -k ${::ezproxy::ws_key}",
+        command => "${::ezproxy::install_path}/ezproxy -k ${::ezproxy::key}",
         creates => "${::ezproxy::install_path}/wskey.key",
         require => Exec['bootstrap ezproxy'],
       }
+
+      file { "${::ezproxy::install_path}/wskey.key":
+        ensure  => file,
+        owner   => $::ezproxy::ezproxy_user,
+        group   => $::ezproxy::ezproxy_group,
+        require => Exec['authorize ezproxy wskey'],
+      }
     }
     else {
-      fail('EZProxy 6 requires a WS Key for authorization.')
+      file { "${::ezproxy::install_path}/ezproxy.key":
+        ensure  => file,
+        owner   => $::ezproxy::ezproxy_user,
+        group   => $::ezproxy::ezproxy_group,
+        require => Exec['bootstrap ezproxy'],
+      }
+
+      file_line { 'ezproxy key':
+        ensure  => present,
+        path    => "${::ezproxy::install_path}/ezproxy.key",
+        line    => $::ezproxy::key,
+        require => File["${::ezproxy::install_path}/ezproxy.key"],
+      }
     }
+  }
+  else {
+    fail('EZProxy requires a key or WS key for authorization.')
   }
 }
