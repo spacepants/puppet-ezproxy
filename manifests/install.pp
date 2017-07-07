@@ -15,7 +15,6 @@ class ezproxy::install {
     ensure  => present,
     system  => true,
     home    => $::ezproxy::install_path,
-    shell   => $::ezproxy::ezproxy_shell,
     gid     => $::ezproxy::ezproxy_group,
     require => Group[$::ezproxy::ezproxy_group]
   }

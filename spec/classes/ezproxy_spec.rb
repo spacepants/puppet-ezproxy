@@ -76,26 +76,13 @@ Alias=ezproxy.service
         system: true,
         )
       }
-      case os_facts[:osfamily]
-      when 'Debian'
-        it { is_expected.to contain_user('ezproxy').with(
-          ensure: 'present',
-          system: true,
-          home: '/usr/local/ezproxy',
-          shell: '/usr/sbin/nologin',
-          gid: 'ezproxy',
-          ).that_requires('Group[ezproxy]')
-        }
-      when 'RedHat'
-        it { is_expected.to contain_user('ezproxy').with(
-          ensure: 'present',
-          system: true,
-          home: '/usr/local/ezproxy',
-          shell: '/sbin/nologin',
-          gid: 'ezproxy',
-          ).that_requires('Group[ezproxy]')
-        }
-      end
+      it { is_expected.to contain_user('ezproxy').with(
+        ensure: 'present',
+        system: true,
+        home: '/usr/local/ezproxy',
+        gid: 'ezproxy',
+        ).that_requires('Group[ezproxy]')
+      }
       it { is_expected.to contain_file('/usr/local/ezproxy').with(
         ensure: 'directory',
         owner: 'ezproxy',
@@ -383,7 +370,6 @@ IncludeFile groups.txt
         ensure: 'present',
         system: true,
         home: '/custom/install/path',
-        shell: '/sbin/nologin',
         gid: 'custom_group',
         ).that_requires('Group[custom_group]')
       }
