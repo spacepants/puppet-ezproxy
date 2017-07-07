@@ -37,6 +37,7 @@ group :system_tests do
   gem 'beaker-puppet_install_helper',                                            require: false
   gem 'beaker-rspec'
   gem 'beaker-hostgenerator'
+  gem 'dotenv'
 end
 
 puppet_version = ENV['PUPPET_GEM_VERSION']

@@ -18,3 +18,4 @@
 .yardwarns
 /tmp/
 /doc/
+.env
