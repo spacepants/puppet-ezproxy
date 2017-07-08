@@ -32,6 +32,18 @@ class ezproxy::install {
     require => User[$user]
   }
 
+  file { $::ezproxy::log_dir:
+    ensure  => directory,
+    owner   => $user,
+    group   => $group,
+    require => User[$user]
+  }
+
+  file { '/etc/logrotate.d/ezproxy':
+    ensure  => file,
+    content => template('ezproxy/logrotate.erb'),
+  }
+
   exec { 'download ezproxy':
     command => "curl -o ${install_dir}/ezproxy ${::ezproxy::download_url}/${download_version}/ezproxy-linux.bin",
     creates => "${install_dir}/ezproxy",

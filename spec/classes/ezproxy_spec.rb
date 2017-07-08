@@ -26,7 +26,7 @@ Option LogSession
 IntruderIPAttempts -interval=5 -expires=15 20
 IntruderUserAttempts -interval=5 -expires=15 10
 UsageLimit -enforce -interval=15 -expires=120 -MB=200 Global
-LogFile -strftime ezp%Y%m.log
+LogFile /var/log/ezproxy/ezproxy.log
 LogFormat %h %l %u %t "%r" %s %b
 IncludeFile groups.txt
 '
@@ -103,6 +103,18 @@ Alias=ezproxy.service
         group: 'ezproxy',
         recurse: true,
         ).that_requires('User[ezproxy]')
+      }
+
+      it { is_expected.to contain_file('/var/log/ezproxy').with(
+        ensure: 'directory',
+        owner: 'ezproxy',
+        group: 'ezproxy',
+        ).that_requires('User[ezproxy]')
+      }
+      it { is_expected.to contain_file('/etc/logrotate.d/ezproxy').with(
+        ensure: 'file',
+        content: %r{/var/log/ezproxy/ezproxy.log},
+        )
       }
 
       it { is_expected.to contain_exec('download ezproxy').with(
@@ -364,6 +376,7 @@ Alias=ezproxy.service
         group: 'custom_group',
         user: 'custom_user',
         install_dir: '/custom/install/path',
+        log_dir: '/custom/log/path',
         server_name: 'my.ezproxy.url',
         download_url: 'http://my.ezproxy.download/link',
         first_port: '9001',
@@ -380,7 +393,7 @@ Alias=ezproxy.service
         max_vhosts: '5000',
         log_filters: ['*.gif*', '*.jpg*'],
         log_format: '%t %h %l %u "%r" %s %b "%{Referer}i" "%{user-agent}i"',
-        log_file: '/var/log/ezproxy/ezproxy.log',
+        log_file: '-strftime ezp%Y%m.log',
         local_users: ['user1:supersecure:admin', 'user2:coolpass:admin'],
         default_stanzas: false,
         service_name: 'custom-service',
@@ -409,7 +422,7 @@ IntruderUserAttempts -interval=5 -expires=15 10
 UsageLimit -enforce -interval=15 -expires=120 -MB=200 Global
 LogFilter *.gif*
 LogFilter *.jpg*
-LogFile /var/log/ezproxy/ezproxy.log
+LogFile -strftime ezp%Y%m.log
 LogFormat %t %h %l %u "%r" %s %b "%{Referer}i" "%{user-agent}i"
 IncludeFile groups.txt
 '
@@ -434,6 +447,17 @@ IncludeFile groups.txt
         group: 'custom_group',
         recurse: true,
         ).that_requires('User[custom_user]')
+      }
+      it { is_expected.to contain_file('/custom/log/path').with(
+        ensure: 'directory',
+        owner: 'custom_user',
+        group: 'custom_group',
+        ).that_requires('User[custom_user]')
+      }
+      it { is_expected.to contain_file('/etc/logrotate.d/ezproxy').with(
+        ensure: 'file',
+        content: %r{/custom/log/path/ezproxy.log},
+        )
       }
       it { is_expected.to contain_exec('download ezproxy').with(
         command: 'curl -o /custom/install/path/ezproxy http://my.ezproxy.download/link/5-7-44/ezproxy-linux.bin',
