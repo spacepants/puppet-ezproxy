@@ -7,21 +7,21 @@
 # @param file_name File name to download as. Also used as the source for the concat fragment.
 # @param order Include order for the stanza.
 # @param group Group for the stanza.
-# @param maxdays Maximum number of days before the remote config is downloaded again.
+# @param max_days Maximum number of days before the remote config is downloaded again.
 #
 define ezproxy::remote_config (
   String           $download_link,
   String           $file_name,
   String           $order         = '1',
   String           $group         = 'default',
-  Optional[String] $maxdays       = undef,
+  Optional[String] $max_days       = undef,
 ) {
 
-  if $maxdays {
-    exec { "refreshing ${name} config: older than ${maxdays} days":
+  if $max_days {
+    exec { "refreshing ${name} config: older than ${max_days} days":
       command => "rm ${::ezproxy::install_dir}/${file_name}",
       path    => '/sbin:/bin:/usr/sbin:/usr/bin',
-      onlyif  => "find ${::ezproxy::install_dir}/${file_name} -mtime +${maxdays} | grep ${file_name}",
+      onlyif  => "find ${::ezproxy::install_dir}/${file_name} -mtime +${max_days} | grep ${file_name}",
       before  => Exec["download ${name} config"],
     }
   }

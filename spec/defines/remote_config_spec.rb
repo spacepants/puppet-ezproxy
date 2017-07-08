@@ -41,7 +41,7 @@ describe 'ezproxy::remote_config', type: :define do
       download_link: 'http://www.test.url/path/to/config',
       file_name: 'sample_config',
       order: '2',
-      maxdays: '30',
+      max_days: '30',
     }}
 
     it { is_expected.to contain_exec('refreshing sample config: older than 30 days').with(
