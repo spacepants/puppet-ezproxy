@@ -1,23 +1,14 @@
-# == Define ezproxy::group
+# ezproxy::group
 #
 # This define builds a group fragment to be used in the sites config file.
 # It also builds the default group which is always used even if you're not
 # adding any additional groups. This is the default EZProxy behavior.
 #
-#
-# === Parameters
-#
-# [*auto_login_ips*]
-#   Array of IPs to autologin for this group.
-#
-# [*include_ips*]
-#   Array of IPs to include for this group.
-#
-# [*exclude_ips*]
-#   Array of IPs to exclude for this group.
-#
-# [*reject_ips*]
-#   Array of IPs to reject for this group.
+# @param auto_login_ips Array of IPs to autologin for this group.
+# @param include_ips Array of IPs to include for this group.
+# @param exclude_ips Array of IPs to exclude for this group.
+# @param reject_ips Array of IPs to reject for this group.
+# @param group_order Sets the load order for this group.
 #
 define ezproxy::group (
   Array  $auto_login_ips = [],
@@ -29,9 +20,9 @@ define ezproxy::group (
 
   concat { "ezproxy group ${title}":
     ensure => present,
-    path   => "${::ezproxy::install_path}/group_${title}.txt",
-    owner  => $::ezproxy::ezproxy_user,
-    group  => $::ezproxy::ezproxy_group,
+    path   => "${::ezproxy::install_dir}/group_${title}.txt",
+    owner  => $::ezproxy::user,
+    group  => $::ezproxy::group,
   }
 
   concat::fragment { "${title} header":

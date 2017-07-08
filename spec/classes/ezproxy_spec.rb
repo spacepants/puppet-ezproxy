@@ -361,12 +361,11 @@ Alias=ezproxy.service
     context 'with custom parameters' do
       let(:params) {{
         key: 'abc123',
-        ezproxy_group: 'custom_group',
-        ezproxy_user: 'custom_user',
-        install_path: '/custom/install/path',
-        ezproxy_url: 'my.ezproxy.url',
+        group: 'custom_group',
+        user: 'custom_user',
+        install_dir: '/custom/install/path',
+        server_name: 'my.ezproxy.url',
         download_url: 'http://my.ezproxy.download/link',
-        dependencies: ['package1', 'package2'],
         first_port: '9001',
         auto_login_ips: ['1.0.0.0-1.255.255.255', '2.0.0.0-2.255.255.255'],
         include_ips: ['3.0.0.0-3.255.255.255', '4.0.0.0-4.255.255.255'],
@@ -387,6 +386,7 @@ Alias=ezproxy.service
         service_name: 'custom-service',
         service_status: 'stopped',
         service_enable: false,
+        log_type: 'User',
       }}
       let(:custom_config) { '### MANAGED BY PUPPET
 RunAs custom_user:custom_group
@@ -403,7 +403,7 @@ Option SafariCookiePatch
 Audit Most
 AuditPurge 7
 Option StatusUser
-Option LogSession
+Option LogUser
 IntruderIPAttempts -interval=5 -expires=15 20
 IntruderUserAttempts -interval=5 -expires=15 10
 UsageLimit -enforce -interval=15 -expires=120 -MB=200 Global
@@ -435,8 +435,6 @@ IncludeFile groups.txt
         recurse: true,
         ).that_requires('User[custom_user]')
       }
-      it { is_expected.to contain_package('package1').with_ensure('installed').that_notifies('Exec[bootstrap ezproxy]') }
-      it { is_expected.to contain_package('package2').with_ensure('installed').that_notifies('Exec[bootstrap ezproxy]') }
       it { is_expected.to contain_exec('download ezproxy').with(
         command: 'curl -o /custom/install/path/ezproxy http://my.ezproxy.download/link/5-7-44/ezproxy-linux.bin',
         creates: '/custom/install/path/ezproxy',

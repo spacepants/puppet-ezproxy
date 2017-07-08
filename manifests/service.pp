@@ -7,9 +7,9 @@ class ezproxy::service {
 
   if $::ezproxy::manage_service {
 
-    $user         = $::ezproxy::ezproxy_user
-    $group        = $::ezproxy::ezproxy_group
-    $install_path = $::ezproxy::install_path
+    $user         = $::ezproxy::user
+    $group        = $::ezproxy::group
+    $install_dir = $::ezproxy::install_dir
 
     if $::ezproxy::service_type == 'systemd' {
       $service_file = "/lib/systemd/system/${::ezproxy::service_name}.service"

@@ -4,42 +4,46 @@
 #
 class ezproxy::install {
 
+  $group = $::ezproxy::group
+  $user = $::ezproxy::user
+  $install_dir = $::ezproxy::install_dir
+  $log_dir = $::ezproxy::log_dir
   $version = $::ezproxy::version
   $download_version = regsubst($version, '\.', '-', 'G')
 
-  group { $::ezproxy::ezproxy_group:
+  group { $group:
     ensure => present,
     system => true,
   }
-  user { $::ezproxy::ezproxy_user:
+  user { $user:
     ensure  => present,
     system  => true,
-    home    => $::ezproxy::install_path,
+    home    => $install_dir,
     shell   => $::ezproxy::ezproxy_shell,
-    gid     => $::ezproxy::ezproxy_group,
-    require => Group[$::ezproxy::ezproxy_group]
+    gid     => $group,
+    require => Group[$group]
   }
 
-  file { $::ezproxy::install_path:
+  file { $install_dir:
     ensure  => directory,
-    owner   => $::ezproxy::ezproxy_user,
-    group   => $::ezproxy::ezproxy_group,
+    owner   => $user,
+    group   => $group,
     recurse => true,
-    require => User[$::ezproxy::ezproxy_user]
+    require => User[$user]
   }
 
   exec { 'download ezproxy':
-    command => "curl -o ${::ezproxy::install_path}/ezproxy ${::ezproxy::download_url}/${download_version}/ezproxy-linux.bin",
-    creates => "${::ezproxy::install_path}/ezproxy",
+    command => "curl -o ${install_dir}/ezproxy ${::ezproxy::download_url}/${download_version}/ezproxy-linux.bin",
+    creates => "${install_dir}/ezproxy",
     path    => '/sbin:/bin:/usr/sbin:/usr/bin',
-    require => File[$::ezproxy::install_path]
+    require => File[$install_dir]
   }
 
-  file { "${::ezproxy::install_path}/ezproxy":
+  file { "${install_dir}/ezproxy":
     ensure  => present,
     mode    => '0755',
-    owner   => $::ezproxy::ezproxy_user,
-    group   => $::ezproxy::ezproxy_group,
+    owner   => $user,
+    group   => $group,
     require => Exec['download ezproxy'],
     notify  => Exec['bootstrap ezproxy']
   }
@@ -52,7 +56,7 @@ class ezproxy::install {
   }
 
   exec { 'bootstrap ezproxy':
-    command     => "${::ezproxy::install_path}/ezproxy -mg",
+    command     => "${install_dir}/ezproxy -mg",
     refreshonly => true,
     returns     => '1',
   }
@@ -60,31 +64,31 @@ class ezproxy::install {
   if $::ezproxy::key {
     if versioncmp($version, '6.0.0') >= 0 {
       exec { 'authorize ezproxy wskey':
-        command => "${::ezproxy::install_path}/ezproxy -k ${::ezproxy::key}",
-        creates => "${::ezproxy::install_path}/wskey.key",
+        command => "${install_dir}/ezproxy -k ${::ezproxy::key}",
+        creates => "${install_dir}/wskey.key",
         require => Exec['bootstrap ezproxy'],
       }
 
-      file { "${::ezproxy::install_path}/wskey.key":
+      file { "${install_dir}/wskey.key":
         ensure  => file,
-        owner   => $::ezproxy::ezproxy_user,
-        group   => $::ezproxy::ezproxy_group,
+        owner   => $user,
+        group   => $group,
         require => Exec['authorize ezproxy wskey'],
       }
     }
     else {
-      file { "${::ezproxy::install_path}/ezproxy.key":
+      file { "${install_dir}/ezproxy.key":
         ensure  => file,
-        owner   => $::ezproxy::ezproxy_user,
-        group   => $::ezproxy::ezproxy_group,
+        owner   => $user,
+        group   => $group,
         require => Exec['bootstrap ezproxy'],
       }
 
       file_line { 'ezproxy key':
         ensure  => present,
-        path    => "${::ezproxy::install_path}/ezproxy.key",
+        path    => "${install_dir}/ezproxy.key",
         line    => $::ezproxy::key,
-        require => File["${::ezproxy::install_path}/ezproxy.key"],
+        require => File["${install_dir}/ezproxy.key"],
       }
     }
   }

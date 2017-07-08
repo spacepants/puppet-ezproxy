@@ -1,4 +1,4 @@
-# == Define ezproxy::remote_config
+# ezproxy::remote_config
 #
 # This define downloads a config file from a remote host and
 # includes it in the sites.txt config file.
@@ -28,30 +28,30 @@ define ezproxy::remote_config (
 
   if $maxdays {
     exec { "refreshing ${name} config: older than ${maxdays} days":
-      command => "rm ${::ezproxy::install_path}/${file_name}",
+      command => "rm ${::ezproxy::install_dir}/${file_name}",
       path    => '/sbin:/bin:/usr/sbin:/usr/bin',
-      onlyif  => "find ${::ezproxy::install_path}/${file_name} -mtime +${maxdays} | grep ${file_name}",
+      onlyif  => "find ${::ezproxy::install_dir}/${file_name} -mtime +${maxdays} | grep ${file_name}",
       before  => Exec["download ${name} config"],
     }
   }
 
   exec { "download ${name} config":
-    command => "curl -o ${::ezproxy::install_path}/${file_name} ${download_link}",
-    creates => "${::ezproxy::install_path}/${file_name}",
+    command => "curl -o ${::ezproxy::install_dir}/${file_name} ${download_link}",
+    creates => "${::ezproxy::install_dir}/${file_name}",
     path    => '/sbin:/bin:/usr/sbin:/usr/bin',
     notify  => Exec["sanitize ${name} config"],
-    require => File[$::ezproxy::install_path]
+    require => File[$::ezproxy::install_dir]
   }
 
   exec { "sanitize ${name} config":
-    command     => "dos2unix ${::ezproxy::install_path}/${file_name}",
+    command     => "dos2unix ${::ezproxy::install_dir}/${file_name}",
     path        => '/sbin:/bin:/usr/sbin:/usr/bin',
     refreshonly => true,
   }
 
   concat::fragment { $name:
     target  => "ezproxy group ${group}",
-    source  => "${::ezproxy::install_path}/${file_name}",
+    source  => "${::ezproxy::install_dir}/${file_name}",
     order   => $order,
     require => Exec["sanitize ${name} config"]
   }

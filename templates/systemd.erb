@@ -5,9 +5,9 @@ Documentation=https://www.oclc.org/support/services/ezproxy.en.html
 After=network.target
 
 [Service]
-ExecStart=<%= @install_path %>/ezproxy
-ExecReload=<%= @install_path %>/ezproxy restart
-WorkingDirectory=<%= @install_path %>
+ExecStart=<%= @install_dir %>/ezproxy
+ExecReload=<%= @install_dir %>/ezproxy restart
+WorkingDirectory=<%= @install_dir %>
 KillMode=control-group
 Restart=on-failure
 

@@ -1,6 +1,6 @@
 ### MANAGED BY PUPPET
-RunAs <%= scope['ezproxy::ezproxy_user'] %>:<%= scope['ezproxy::ezproxy_group'] %>
-Name <%= scope['ezproxy::ezproxy_url'] %>
+RunAs <%= scope['ezproxy::user'] %>:<%= scope['ezproxy::group'] %>
+Name <%= scope['ezproxy::server_name'] %>
 <% if scope['ezproxy::proxy_by_hostname'] -%>
 Option ProxyByHostname
 <% else -%>
@@ -28,11 +28,7 @@ LoginCookieName <%= scope['ezproxy::login_cookie_name'] %>
 Audit Most
 AuditPurge 7
 Option StatusUser
-<% if scope['ezproxy::log_user'] -%>
-Option LogUser
-<% else -%>
-Option LogSession
-<% end -%>
+Option Log<%= scope['ezproxy::log_type'] %>
 IntruderIPAttempts -interval=5 -expires=15 20
 IntruderUserAttempts -interval=5 -expires=15 10
 UsageLimit -enforce -interval=15 -expires=120 -MB=200 Global

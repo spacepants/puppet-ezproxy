@@ -1,66 +1,66 @@
-# == Class ezproxy::config
+# ezproxy::config
 #
 # This class is called from ezproxy for service config.
 #
 class ezproxy::config {
   # Set resource defaults
   File {
-    owner   => $::ezproxy::ezproxy_user,
-    group   => $::ezproxy::ezproxy_group,
+    owner   => $::ezproxy::user,
+    group   => $::ezproxy::group,
   }
 
-  file { "${::ezproxy::install_path}/user.txt":
+  file { "${::ezproxy::install_dir}/user.txt":
     ensure  => file,
     content => template('ezproxy/user.txt.erb')
   }
 
-  file { "${::ezproxy::install_path}/config.txt":
+  file { "${::ezproxy::install_dir}/config.txt":
     ensure  => file,
     content => template('ezproxy/config.txt.erb')
   }
 
-  file { "${::ezproxy::install_path}/ezproxy.rnd":
+  file { "${::ezproxy::install_dir}/ezproxy.rnd":
     ensure  => file,
   }
-  file { "${::ezproxy::install_path}/license.txt":
+  file { "${::ezproxy::install_dir}/license.txt":
     ensure  => file,
   }
-  file { "${::ezproxy::install_path}/messages.txt":
+  file { "${::ezproxy::install_dir}/messages.txt":
     ensure  => file,
   }
-  file { "${::ezproxy::install_path}/mimetype":
+  file { "${::ezproxy::install_dir}/mimetype":
     ensure  => file,
   }
-  file { "${::ezproxy::install_path}/docs":
+  file { "${::ezproxy::install_dir}/docs":
     ensure  => directory,
   }
-  file { "${::ezproxy::install_path}/docs/cookie.htm":
+  file { "${::ezproxy::install_dir}/docs/cookie.htm":
     ensure  => file,
   }
-  file { "${::ezproxy::install_path}/docs/login.htm":
+  file { "${::ezproxy::install_dir}/docs/login.htm":
     ensure  => file,
   }
-  file { "${::ezproxy::install_path}/docs/loginbu.htm":
+  file { "${::ezproxy::install_dir}/docs/loginbu.htm":
     ensure  => file,
   }
-  file { "${::ezproxy::install_path}/docs/logout.htm":
+  file { "${::ezproxy::install_dir}/docs/logout.htm":
     ensure  => file,
   }
-  file { "${::ezproxy::install_path}/docs/logup.htm":
+  file { "${::ezproxy::install_dir}/docs/logup.htm":
     ensure  => file,
   }
-  file { "${::ezproxy::install_path}/docs/menu.htm":
+  file { "${::ezproxy::install_dir}/docs/menu.htm":
     ensure  => file,
   }
-  file { "${::ezproxy::install_path}/docs/https.htm":
+  file { "${::ezproxy::install_dir}/docs/https.htm":
     ensure  => file,
   }
 
   concat { 'ezproxy groups':
     ensure => present,
-    path   => "${::ezproxy::install_path}/groups.txt",
-    owner  => $::ezproxy::ezproxy_user,
-    group  => $::ezproxy::ezproxy_group,
+    path   => "${::ezproxy::install_dir}/groups.txt",
+    owner  => $::ezproxy::user,
+    group  => $::ezproxy::group,
   }
 
   ezproxy::group { 'default':

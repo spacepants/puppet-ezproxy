@@ -131,14 +131,13 @@
 #   in the log_format parameter
 #
 class ezproxy (
-  String                                         $ezproxy_group            = 'ezproxy',
-  String                                         $ezproxy_user             = 'ezproxy',
-  Stdlib::Absolutepath                           $install_path             = '/usr/local/ezproxy',
+  String                                         $group                    = 'ezproxy',
+  String                                         $user                     = 'ezproxy',
+  Stdlib::Absolutepath                           $install_dir              = '/usr/local/ezproxy',
   String                                         $version                  = '5.7.44',
   Optional[String]                               $key                      = undef,
-  String                                         $ezproxy_url              = $::fqdn,
+  String                                         $server_name              = $::fqdn,
   String                                         $download_url             = 'https://www.oclc.org/content/dam/support/ezproxy/documentation/download/binaries',
-  Array[String]                                  $dependencies             = $::ezproxy::params::dependencies,
   Boolean                                        $proxy_by_hostname        = false,
   String                                         $first_port               = '5000',
   Array                                          $auto_login_ips           = [],
@@ -180,12 +179,12 @@ class ezproxy (
   Hash                                           $groups                   = {},
   Boolean                                        $manage_service           = true,
   String                                         $service_name             = 'ezproxy',
-  String                                         $service_status           = 'running',
+  Enum['running','stopped']                      $service_status           = 'running',
   Boolean                                        $service_enable           = true,
   Optional[String]                               $login_cookie_name        = undef,
   Optional[String]                               $http_proxy               = undef,
   Optional[String]                               $https_proxy              = undef,
-  Boolean                                        $log_user                 = false,
+  Enum['User','Session']                         $log_type                 = 'Session',
 ) inherits ::ezproxy::params {
 
   class { '::ezproxy::install': }
