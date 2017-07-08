@@ -1,7 +1,6 @@
-# == Class ezproxy::service
+# ezproxy::service
 #
-# This class is meant to be called from ezproxy.
-# It ensures the service is running if it's managed.
+# This class manages the service.
 #
 class ezproxy::service {
 

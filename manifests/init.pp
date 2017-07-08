@@ -3,132 +3,61 @@
 # This module manages EZProxy. Databases and other EZProxy sites are loaded in
 # a custom config file called sites.txt out of the ezproxy::stanza defined type.
 #
-# === Parameters
-#
-# [*ezproxy_group*]
-#   Group the ezproxy user should belong to.
-#
-# [*ezproxy_user*]
-#   User the ezproxy service should run as.
-#
-# [*install_path*]
-#   Path ezproxy should be installed in.
-#
-# [*ezproxy_url*]
-#   EZProxy URL.
-#
-# [*download_url*]
-#   URL to download the ezproxy binary.
-#
-# [*proxy_by_hostname*]
-#   Boolean for whether or not to proxy by hostname.
-#
-# [*first_port*]
-#   First port to use when proxying by port.
-#
-# [*auto_login_ips*]
-#   Array of IPs to autologin for the default group.
-#
-# [*include_ips*]
-#   Array of IPs to include for the default group.
-#
-# [*exclude_ips*]
-#   Array of IPs to exclude for the default group.
-#
-# [*reject_ips*]
-#   Array of IPs to reject for the default group.
-#
-# [*login_port*]
-#   Port to listen for HTTP.
-#
-# [*ssl*]
-#   Boolean for whether or not to accept SSL connections.
-#
-# [*https_login*]
-#   Boolean for whether or not to force logins through SSL.
-#
-# [*https_admin*]
-#   Boolean for whether or not to force admin sessions through SSL.
-#
-# [*max_lifetime*]
-#   How long in minutes a session should remain valid after last access.
-#
-# [*max_sessions*]
-#   Maximum number of sessions that can exist concurrently.
-#
-# [*max_vhosts*]
-#   Maximum number of virtual hosts that ezproxy can create.
-#
-# [*log_filters*]
-#   Array of filters to exclude from the logs.
-#
-# [*local_users*]
-#   Array of local users to include.
-#
-# [*admins*]
-#   Array of ldap or cas users to pass to admin.
-#
-# [*cas*]
-#   Boolean for whether or not to authenticate via CAS.
-#
-# [*cas_login_url*]
-#   CAS URL that should be used for login.
-#
-# [*cas_service_validate_url*]
-#   CAS URL that should be used for service validation.
-#
-# [*ldap*]
-#   Boolean for whether or not to authenticate via LDAP.
-#
-# [*ldap_options*]
-#   Array of LDAP options to include.
-#
-# [*ldap_url*]
-#   LDAP URL to use to authenticate users.
-#
-# [*default_stanzas*]
-#   Boolean for whether or not to include the default databases from OCLC.
-#
-# [*include_files*]
-#   Array of files to include in config.txt
-#
-# [*remote_configs*]
-#   Hash of remote config stanzas to include.
-#   More info in manifests/remote_config.pp.
-#
-# [*stanzas*]
-#   Hash of database stanzas to include.
-#   More info in manifests/stanza.pp.
-#
-# [*groups*]
-#   Hash of database groups to include.
-#   More info in manifests/group.pp.
-#
-# [*manage_service*]
-#   Boolean for whether or not to manage the service.
-#
-# [*service_name*]
-#   Name of the startup script to use.
-#
-# [*service_status*]
-#   Should the service be running or stopped.
-#
-# [*service_enable*]
-#   Boolean for whether or not to start ezproxy on restart.
-#
-# [*login_cookie_name*]
-# String for alternate cookie name for EZproxy session cookie
-#
-# [*http_proxy*]
-# String for forward proxy configuration for http proxy_hostname:port
-#
-# [*https_proxy*]
-# String for forward proxy configuration for https proxy_hostname:port
-#
-# [*log_user*]
-#   Boolean for whether or not logging of username should be done. This disables
-#   logging of session, if you require both then %{ezproxy-session} can be included
-#   in the log_format parameter
+# @param group Group the ezproxy user should belong to.
+# @param user User the ezproxy service should run as.
+# @param install_dir Directory ezproxy should be installed in.
+# @param log_dir Directory ezproxy should use for logging.
+# @param version Version of EZProxy to install.
+# @param key EZProxy authorization key.
+# @param server_name EZProxy server name.
+# @param download_url URL to download the ezproxy binary.
+# @param proxy_by_hostname Boolean for whether or not to proxy by hostname.
+# @param first_port First port to use when proxying by port.
+# @param auto_login_ips Array of IPs to autologin for the default group.
+# @param include_ips Array of IPs to include for the default group.
+# @param exclude_ips Array of IPs to exclude for the default group.
+# @param reject_ips Array of IPs to reject for the default group.
+# @param login_port Port to listen for HTTP.
+# @param ssl Boolean for whether or not to accept SSL connections.
+# @param https_login Boolean for whether or not to force logins through SSL.
+# @param https_admin Boolean for whether or not to force admin sessions through SSL.
+# @param max_lifetime How long in minutes a session should remain valid after last access.
+# @param max_sessions Maximum number of sessions that can exist concurrently.
+# @param max_vhosts Maximum number of virtual hosts that ezproxy can create.
+# @param log_filters Array of filters to exclude from the logs.
+# @param log_format Array of filters to exclude from the logs.
+# @param log_file Path that ezproxy should log to.
+# @param local_users Array of local users to include.
+# @param admins Array of ldap or cas users to pass to admin.
+# @param user_groups Array of user groups to define.
+# @param cas Boolean for whether or not to authenticate via CAS.
+# @param cas_login_url CAS URL that should be used for login.
+# @param cas_service_validate_url CAS URL that should be used for service validation.
+# @param ldap Boolean for whether or not to authenticate via LDAP.
+# @param ldap_options Array of LDAP options to include.
+# @param ldap_url LDAP URL to use to authenticate users.
+# @param cgi Boolean for whether or not to authenticate via CGI.
+# @param cgi_url CGI URL to use to authenticate users.
+# @param ticket_auth Boolean for whether or not to authenticate via ticket.
+# @param ticket_acceptgroups Groups allowed to appear in tickets.
+# @param ticket_validtime Minutes a ticket should be considered valid.
+# @param ticket_timeoffset Offset in minutes when comparing ticket time.
+# @param ticket_crypt_algorithm Hash algorithm for validating tickets.
+# @param ticket_secretkey Shared key for validating tickets.
+# @param expiredticket_url URL to use for expired tickets.
+# @param default_stanzas Boolean for whether or not to include the default databases from OCLC.
+# @param include_files Array of files to include in config.txt
+# @param remote_configs Hash of remote config stanzas to include.
+# @param stanzas Hash of database stanzas to include.
+# @param groups Hash of database groups to include.
+# @param manage_service Boolean for whether or not to manage the service.
+# @param service_name Name of the startup script to use.
+# @param service_status Should the service be running or stopped.
+# @param service_enable Boolean for whether or not to start ezproxy on restart.
+# @param login_cookie_name String for alternate cookie name for EZproxy session cookie
+# @param http_proxy String for forward proxy configuration for http proxy_hostname:port
+# @param https_proxy String for forward proxy configuration for https proxy_hostname:port
+# @param log_type Whether to log user by username or session.
 #
 class ezproxy (
   String                                         $group                    = 'ezproxy',

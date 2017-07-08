@@ -1,7 +1,6 @@
-# == Class ezproxy::params
+# ezproxy::params
 #
-# This class is meant to be called from ezproxy.
-# It sets variables according to platform.
+# This class sets variables according to platform.
 #
 class ezproxy::params {
 

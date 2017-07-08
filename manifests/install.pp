@@ -1,4 +1,4 @@
-# == Class ezproxy::install
+# ezproxy::install
 #
 # This class is called from ezproxy for install.
 #

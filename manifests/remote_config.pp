@@ -1,22 +1,13 @@
 # ezproxy::remote_config
 #
-# This define downloads a config file from a remote host and
-# includes it in the sites.txt config file.
+# This define downloads a config file from a remote host and includes it in
+# the sites.txt config file.
 #
-# === Parameters
-#
-# [*download_link*]
-#   URL of the config file to download.
-#
-# [*file_name*]
-#   File name to download as. Also used as the source for the
-#   concat fragment.
-#
-# [*order*]
-#   Include order for the stanza.
-#
-# [*group*]
-#   Group for the stanza.
+# @param download_link URL of the config file to download.
+# @param file_name File name to download as. Also used as the source for the concat fragment.
+# @param order Include order for the stanza.
+# @param group Group for the stanza.
+# @param maxdays Maximum number of days before the remote config is downloaded again.
 #
 define ezproxy::remote_config (
   String           $download_link,
