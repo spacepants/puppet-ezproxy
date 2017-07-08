@@ -1,3 +1,13 @@
+2017-07-08 Release 2.0.0
+- Dropped Puppet 3 support.
+- Added authorization key management.
+- Added systemd support
+- Set better logging defaults, including logrotate.
+- Dropped ialibs-32 support.
+- The default group has been downcased.
+- Simplified main class params.
+- Package dependencies are simplified, but no longer overridable.
+
 2015-11-09 Release 1.1.0
 - Added preliminary support for Groups. This refactors `sites.txt` into the
   default group.
