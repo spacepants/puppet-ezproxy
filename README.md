@@ -107,6 +107,16 @@ ezproxy::stanza { 'FirstSearch':
 }
 ```
 
+### EZProxy upgrades
+EZProxy can be upgraded by incrementing this version number. This will STOP the running instance of EZProxy and attempt to upgrade.
+
+```puppet
+class { 'ezproxy':
+  key     => 'my-ezproxy-key',
+  version => '6.2.2',
+}
+```
+
 ### Groups
 If you want to set up groups, they're also available as defined types:
 
@@ -288,7 +298,7 @@ ezproxy::stanzas:
 
 #### Private Classes
 
-* `ezproxy::facts`: Enable external facts for running instance of EZProxy. This class is required to handle upgrades of ezproxy. 
+* `ezproxy::facts`: Enable external facts for running instance of EZProxy. This class is required to handle upgrades of ezproxy.
 * `ezproxy::install`: Installs EZProxy
 * `ezproxy::config`: Modifies EZProxy configuration files
 * `ezproxy::service`: Manages the EZProxy service

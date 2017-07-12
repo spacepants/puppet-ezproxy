@@ -77,6 +77,9 @@ Alias=ezproxy.service
       it { is_expected.to contain_class('ezproxy::config') }
       it { is_expected.to contain_class('ezproxy::service').that_subscribes_to('Class[ezproxy::config]') }
 
+      it { is_expected.not_to contain_notify('Attempting to upgrade EZProxy') }
+      it { is_expected.not_to contain_exec('stop ezproxy prior to upgrade') }
+
       it { is_expected.to contain_file('/etc/facter').with(
         ensure: 'directory',
         )
@@ -720,6 +723,26 @@ IfUser ldapadmin2; Admin
 
       it { expect { is_expected.to contain_class('ezproxy') }.to raise_error(Puppet::Error, /EZProxy requires a key or WS key for authorization/) }
     end
+  end
+  context 'when upgrading from another version of EZProxy' do
+    let(:facts) {{
+      key: 'abc123',
+      osfamily: 'RedHat',
+      architecture: 'x86_64',
+      operatingsystemmajrelease: '6',
+      puppetversion: '4.10.4',
+      ezproxy_version: '1.2.3',
+    }}
+    let(:params) {{
+      key: 'abc123',
+    }}
+
+    it { is_expected.to contain_notify('Attempting to upgrade EZProxy') }
+    it { is_expected.to contain_exec('stop ezproxy prior to upgrade').with(
+      command: 'service ezproxy stop && sleep 15',
+      path: '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
+      ).that_comes_before('Class[ezproxy::install]')
+    }
   end
   context 'when installing on PE' do
     let(:facts) {{
