@@ -1,0 +1,8 @@
+#!/bin/bash
+EZPROXY_BIN="<%= @install_dir %>/ezproxy"
+
+if [ -x "$EZPROXY_BIN" ]
+then
+  VERSION=`"$EZPROXY_BIN" -v | awk '/[0-9]+\.[0-9]+\.[0-9]+/ {print $2}'`
+  echo "ezproxy_version=$VERSION"
+fi

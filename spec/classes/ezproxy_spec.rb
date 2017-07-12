@@ -6,7 +6,11 @@ describe 'ezproxy' do
   }
   on_supported_os(test_on).each do |os, os_facts|
     context "with required parameters on #{os}" do
-      let(:facts) { os_facts }
+      let(:facts) do
+        os_facts.merge(
+          puppetversion: '4.10.4',
+        )
+      end
       let(:params) {{
         key: 'abc123',
       }}
@@ -68,9 +72,24 @@ Alias=ezproxy.service
       it { is_expected.to compile.with_all_deps }
       it { is_expected.to contain_class('ezproxy') }
       it { is_expected.to contain_class('ezproxy::params') }
+      it { is_expected.to contain_class('ezproxy::facts').that_comes_before('Class[ezproxy::install]') }
       it { is_expected.to contain_class('ezproxy::install').that_comes_before('Class[ezproxy::config]') }
       it { is_expected.to contain_class('ezproxy::config') }
       it { is_expected.to contain_class('ezproxy::service').that_subscribes_to('Class[ezproxy::config]') }
+
+      it { is_expected.to contain_file('/etc/facter').with(
+        ensure: 'directory',
+        )
+      }
+      it { is_expected.to contain_file('/etc/facter/facts.d').with(
+        ensure: 'directory',
+        )
+      }
+      it { is_expected.to contain_file('/etc/facter/facts.d/ezproxy_facts.sh').with(
+        ensure: 'file',
+        mode: '0755',
+        ).with_content(%r{EZPROXY_BIN="/usr/local/ezproxy/ezproxy"})
+      }
 
       it { is_expected.to contain_group('ezproxy').with(
         ensure: 'present',
@@ -348,7 +367,10 @@ Alias=ezproxy.service
     on_supported_os(test_on).each do |_os, os_facts|
       context "with required parameters on #{os_facts[:operatingsystem]}-#{os_facts[:operatingsystemmajrelease]}-amd64" do
         let(:facts) do
-          os_facts.merge(architecture: 'amd64')
+          os_facts.merge(
+            architecture: 'amd64',
+            puppetversion: '4.10.4',
+          )
         end
         let(:params) {{
           key: 'abc123',
@@ -368,6 +390,7 @@ Alias=ezproxy.service
       osfamily: 'RedHat',
       architecture: 'x86_64',
       operatingsystemmajrelease: '6',
+      puppetversion: '4.10.4',
     }}
 
     context 'with custom parameters' do
@@ -426,6 +449,12 @@ LogFile -strftime ezp%Y%m.log
 LogFormat %t %h %l %u "%r" %s %b "%{Referer}i" "%{user-agent}i"
 IncludeFile groups.txt
 '
+      }
+
+      it { is_expected.to contain_file('/etc/facter/facts.d/ezproxy_facts.sh').with(
+        ensure: 'file',
+        mode: '0755',
+        ).with_content(%r{EZPROXY_BIN="/custom/install/path/ezproxy"})
       }
 
       it { is_expected.to contain_group('custom_group').with(
@@ -692,12 +721,39 @@ IfUser ldapadmin2; Admin
       it { expect { is_expected.to contain_class('ezproxy') }.to raise_error(Puppet::Error, /EZProxy requires a key or WS key for authorization/) }
     end
   end
+  context 'when installing on PE' do
+    let(:facts) {{
+      key: 'abc123',
+      osfamily: 'RedHat',
+      architecture: 'x86_64',
+      operatingsystemmajrelease: '6',
+      puppetversion: '4.10.4 (Puppet Enterprise 2017.2.2)',
+    }}
+    let(:params) {{
+      key: 'abc123',
+    }}
+
+    it { is_expected.to contain_file('/etc/puppetlabs/facter').with(
+      ensure: 'directory',
+      )
+    }
+    it { is_expected.to contain_file('/etc/puppetlabs/facter/facts.d').with(
+      ensure: 'directory',
+      )
+    }
+    it { is_expected.to contain_file('/etc/puppetlabs/facter/facts.d/ezproxy_facts.sh').with(
+      ensure: 'file',
+      mode: '0755',
+      ).with_content(%r{EZPROXY_BIN="/usr/local/ezproxy/ezproxy"})
+    }
+  end
 
   context 'unsupported operating system' do
     describe 'ezproxy class without any parameters on Solaris/Nexenta' do
       let(:facts) {{
         osfamily:        'Solaris',
         operatingsystem: 'Nexenta',
+        puppetversion: '4.10.4',
       }}
 
       it { expect { is_expected.to contain_class('ezproxy') }.to raise_error(Puppet::Error, /Nexenta not supported/) }

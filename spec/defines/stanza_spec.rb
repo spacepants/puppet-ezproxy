@@ -5,6 +5,7 @@ describe 'ezproxy::stanza', type: :define do
     osfamily:                  'RedHat',
     architecture:              'x86_64',
     operatingsystemmajrelease: '6',
+    puppetversion:             '4.10.4',
   }}
   let(:title) { 'sample' }
   let(:pre_condition) { " class { 'ezproxy': key => 'abc123' } " }

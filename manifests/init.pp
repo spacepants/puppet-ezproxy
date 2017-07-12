@@ -117,7 +117,8 @@ class ezproxy (
   Enum['User','Session']                         $log_type                 = 'Session',
 ) inherits ::ezproxy::params {
 
-  class { '::ezproxy::install': }
+  class { '::ezproxy::facts': }
+  -> class { '::ezproxy::install': }
   -> class { '::ezproxy::config': }
   ~> class { '::ezproxy::service': }
   -> Class['::ezproxy']

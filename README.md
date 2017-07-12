@@ -97,8 +97,6 @@ ezproxy::remote_config { 'Oxford Journals':
 }
 ```
 
-
-
 Note that the downloaded config fill will get passed through `dos2unix` in order to strip out any potential Windows file artifacts.
 
 ```puppet
@@ -290,6 +288,7 @@ ezproxy::stanzas:
 
 #### Private Classes
 
+* `ezproxy::facts`: Enable external facts for running instance of EZProxy. This class is required to handle upgrades of ezproxy. 
 * `ezproxy::install`: Installs EZProxy
 * `ezproxy::config`: Modifies EZProxy configuration files
 * `ezproxy::service`: Manages the EZProxy service
