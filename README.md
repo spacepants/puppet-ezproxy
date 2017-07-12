@@ -34,6 +34,8 @@ Individual databases and sites are built into file fragments which are then conc
 * EZProxy now logs to the `/var/log/ezproxy` directory by default now, and a logrotate rule is set for it.
 * All 64-bit Debian family operating systems now use `lib32z1` for compatibility.
 * The default group has been downcased.
+* The installed EZProxy version is now available as a custom external fact: `ezproxy_version`
+* EZProxy can be upgraded in place if the desired version of EZProxy is different from the current version.
 
 #### Parameter Changes
 * `key` sets the EZProxy authorization or WS key
