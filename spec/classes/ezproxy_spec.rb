@@ -741,7 +741,7 @@ IfUser ldapadmin2; Admin
     it { is_expected.to contain_exec('stop ezproxy prior to upgrade').with(
       command: 'service ezproxy stop && sleep 15',
       path: '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-      ).that_comes_before('Class[ezproxy::install]')
+      ).that_comes_before('Exec[download ezproxy]')
     }
   end
   context 'when installing on PE' do

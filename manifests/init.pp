@@ -125,7 +125,7 @@ class ezproxy (
       exec { 'stop ezproxy prior to upgrade':
         command => 'service ezproxy stop && sleep 15',
         path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-        before  => Class['ezproxy::install'],
+        before  => Exec['download ezproxy'],
       }
     }
   }
