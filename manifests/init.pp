@@ -117,19 +117,6 @@ class ezproxy (
   Enum['User','Session']                         $log_type                 = 'Session',
 ) inherits ::ezproxy::params {
 
-  if defined('$::ezproxy_version') {
-    # If the running version of EZProxy is not the expected version of EZProxy
-    # Shut it down in preparation for upgrade.
-    if versioncmp($version, $::ezproxy_version) != 0 {
-      notify { 'Attempting to upgrade EZProxy': }
-      exec { 'stop ezproxy prior to upgrade':
-        command => 'service ezproxy stop && sleep 15',
-        path    => '/usr/bin:/usr/sbin:/bin:/usr/local/bin',
-        before  => Exec['download ezproxy'],
-      }
-    }
-  }
-
   class { '::ezproxy::facts': }
   -> class { '::ezproxy::install': }
   -> class { '::ezproxy::config': }

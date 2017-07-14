@@ -44,6 +44,19 @@ class ezproxy::install {
     content => template('ezproxy/logrotate.erb'),
   }
 
+  if defined('$::ezproxy_version') {
+    # If the running version of EZProxy is not the expected version of EZProxy
+    # Shut it down in preparation for upgrade.
+    if versioncmp($version, $::ezproxy_version) != 0 {
+      notify { 'Attempting to upgrade EZProxy': }
+      exec { 'stop ezproxy prior to upgrade':
+        command => 'service ezproxy stop && sleep 15',
+        path    => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin',
+        before  => Exec['download ezproxy'],
+      }
+    }
+  }
+
   exec { 'download ezproxy':
     command => "curl -o ${install_dir}/ezproxy ${::ezproxy::download_url}/${download_version}/ezproxy-linux.bin",
     creates => "${install_dir}/ezproxy",
