@@ -79,6 +79,7 @@ Alias=ezproxy.service
 
       it { is_expected.not_to contain_notify('Attempting to upgrade EZProxy') }
       it { is_expected.not_to contain_exec('stop ezproxy prior to upgrade') }
+      it { is_expected.not_to contain_exec('remove old ezproxy binary') }
 
       it { is_expected.to contain_file('/etc/facter').with(
         ensure: 'directory',
@@ -742,6 +743,12 @@ IfUser ldapadmin2; Admin
     it { is_expected.to contain_exec('stop ezproxy prior to upgrade').with(
       command: 'service ezproxy stop && sleep 15',
       path: '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin',
+      ).that_comes_before('Exec[download ezproxy]').that_notifies('Exec[remove old ezproxy binary]')
+    }
+    it { is_expected.to contain_exec('remove old ezproxy binary').with(
+      command: 'rm /usr/local/ezproxy/ezproxy',
+      path: '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin',
+      refreshonly: true,
       ).that_comes_before('Exec[download ezproxy]')
     }
   end

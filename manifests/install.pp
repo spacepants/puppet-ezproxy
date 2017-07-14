@@ -53,6 +53,13 @@ class ezproxy::install {
         command => 'service ezproxy stop && sleep 15',
         path    => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin',
         before  => Exec['download ezproxy'],
+        notify  => Exec['remove old ezproxy binary'],
+      }
+      exec { 'remove old ezproxy binary':
+        command     => "rm ${install_dir}/ezproxy",
+        path        => '/usr/bin:/usr/sbin:/bin:/sbin:/usr/local/bin',
+        before      => Exec['download ezproxy'],
+        refreshonly => true,
       }
     }
   }
