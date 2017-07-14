@@ -349,7 +349,7 @@ Alias=ezproxy.service
         enable: true,
         hasstatus: true,
         hasrestart: true,
-        )
+        ).that_subscribes_to('Exec[download ezproxy]')
       }
     end
   end
@@ -624,7 +624,7 @@ IncludeFile groups.txt
         enable: false,
         hasstatus: true,
         hasrestart: true,
-        )
+        ).that_subscribes_to('Exec[download ezproxy]')
       }
     end
 

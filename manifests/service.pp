@@ -30,6 +30,7 @@ class ezproxy::service {
       enable     => $::ezproxy::service_enable,
       hasrestart => true,
       hasstatus  => true,
+      subscribe  => Exec['download ezproxy'],
     }
 
   }

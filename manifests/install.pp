@@ -61,7 +61,7 @@ class ezproxy::install {
     command => "curl -o ${install_dir}/ezproxy ${::ezproxy::download_url}/${download_version}/ezproxy-linux.bin",
     creates => "${install_dir}/ezproxy",
     path    => '/sbin:/bin:/usr/sbin:/usr/bin',
-    require => File[$install_dir]
+    require => File[$install_dir],
   }
 
   file { "${install_dir}/ezproxy":
@@ -70,7 +70,7 @@ class ezproxy::install {
     owner   => $user,
     group   => $group,
     require => Exec['download ezproxy'],
-    notify  => Exec['bootstrap ezproxy']
+    notify  => Exec['bootstrap ezproxy'],
   }
 
   $::ezproxy::dependencies.each |$dependency| {
