@@ -1,3 +1,6 @@
+2017-07-14 Release 2.1.1
+- Fixed a bug with resource ordering when upgrading EZProxy
+
 2017-07-12 Release 2.1.0
 - Added a custom external fact: ezproxy_version.
 - EZProxy can be upgraded in place.
