@@ -24,6 +24,7 @@
 # @param max_lifetime How long in minutes a session should remain valid after last access.
 # @param max_sessions Maximum number of sessions that can exist concurrently.
 # @param max_vhosts Maximum number of virtual hosts that ezproxy can create.
+# @param max_concurrent_transfers Maximum number of HTTP transfers that can be active concurrently in EZproxy.
 # @param log_filters Array of filters to exclude from the logs.
 # @param log_format Array of filters to exclude from the logs.
 # @param log_file Path that ezproxy should log to.
@@ -81,6 +82,7 @@ class ezproxy (
   String                                         $max_lifetime             = '120',
   String                                         $max_sessions             = '500',
   String                                         $max_vhosts               = '1000',
+  String                                         $max_concurrent_transfers  = '200',
   Array                                          $log_filters              = [],
   String                                         $log_format               = '%h %l %u %t "%r" %s %b',
   String                                         $log_file                 = '/var/log/ezproxy/ezproxy.log',

@@ -398,6 +398,10 @@ Maximum number of sessions that can exist concurrently. Default: `500`
 
 Maximum number of virtual hosts that ezproxy can create. Default: `1000`
 
+#### `max_concurrent_transfers`
+
+Maximum number of HTTP transfers that can be active concurrently in EZproxy. Default: `200`
+
 #### `log_filters`
 
 Array of filters to exclude from the logs. Optional.

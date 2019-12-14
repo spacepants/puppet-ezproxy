@@ -21,6 +21,7 @@ Option ForceHTTPSAdmin
 MaxLifetime <%= scope['ezproxy::max_lifetime'] %>
 MaxSessions <%= scope['ezproxy::max_sessions'] %>
 MaxVirtualHosts <%= scope['ezproxy::max_vhosts'] %>
+MaxConcurrentTransfers <%= scope['ezproxy::max_concurrent_transfers'] %>
 Option SafariCookiePatch
 <% if scope['ezproxy::login_cookie_name'] -%>
 LoginCookieName <%= scope['ezproxy::login_cookie_name'] %>
